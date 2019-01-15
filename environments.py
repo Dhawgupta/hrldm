@@ -1,0 +1,2 @@
+class MetaEnv:
+    pass
