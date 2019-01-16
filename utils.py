@@ -29,6 +29,7 @@ Actione :
 import numpy as np
 import random
 from impdicts import *
+
 NO_SLOTS = 8
 META_STATE_SIZE = 5
 META_OPTION_SIZE = 5
@@ -50,3 +51,13 @@ def get_random_action_goal(goal):
     return random.choice(intent2action[goal])
     
 
+
+def one_hot(point, size): 
+    '''
+    Args: 
+    point : The place where we want the one to be
+    size : The size of the total vector
+    '''
+    vector = np.zeros(size)
+    vector[point] = 1.0
+    return np.expand_dims(vector, axis=0)

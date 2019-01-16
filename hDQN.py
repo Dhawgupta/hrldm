@@ -133,7 +133,7 @@ class hDQN:
         if self.meta_epsilon < random.random():
             pred = self.meta_controller.predict(state, verbose=0)
             print("pred shape: " + str(pred.shape))
-            return np.argmax(pred)+1 #TODO Why is there a +1 
+            return np.argmax(pred) 
         print("Exploring")
         return np.random.randint(META_OPTION_SIZE) 
 
