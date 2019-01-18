@@ -63,3 +63,5 @@ def one_hot(point, size):
     vector[point] = 1.0
     # return np.expand_dims(vector, axis=0) # returns a 2D array
     return vector
+
+

@@ -1,3 +1,5 @@
+from typing import Tuple, List, Dict
+
 slot2tag = {'to_loc' : '$ACITY$','froms_loc' : '$DCITY$',
             'date' : '$DATE$','time' : '$TIME$',
             'class' : '$CLASS$', 'round_trip': '$RTRIP$' ,
@@ -39,10 +41,11 @@ intent2action ={ 0:[0, 1, 2, 3, 4, 8, 9, 11, 12, 13, 14, 15, 19], # Intent Fligh
 }
 
 # mapping of the intent to there relevant slots values
-intent2slots - {0 : [0,1,2,3,4]
-                1 : [0, 1, 3, 4, 5]
-                2 : [0, 1, 4,]
-                3 : [ 6, 7,]
-                4 : [ 6, 7,]}
+intent2slots = {0 : [0,1,2,3,4],
+                1 : [0, 1, 3, 4, 5],
+                2 : [0, 1, 4,],
+                3 : [ 6, 7,],
+                4 : [ 6, 7,],
+                }
 
 

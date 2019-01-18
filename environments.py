@@ -7,7 +7,7 @@ import numpy as np
 import random
 import utils
 import impdicts
-
+from typing import List, Tuple, Dict
 
 class MetaEnv:
 
@@ -20,7 +20,10 @@ class MetaEnv:
         :param primitive_action_space:  The number of primitve actions available
         :param current_intents: Array containing the active intents for the current obj
         """
-        
+        self.threshold = 0.7
+        self.w1 = w1
+        self.w2 = w2
+        self.w3 = w3 # probably will not be using this
         self.intent_space_size = intent_space_size
         self.slot_space_size = slot_space_size
         self.options_space = options_space
@@ -32,6 +35,7 @@ class MetaEnv:
         self.current_slot_state = []
         self.current_intent_no = 0
         self.no_intents = 0 # the number of intents to be served i.e. len(self.current_obj_intent)
+        self.goal_iter = [] # The number of iterations done for each subgoal completion
         self.reset()
         # self.slot_states # this is the list of all the slot states encountered in runs
         # self.current_slot_state # this is state of the confidence values in the current context
@@ -40,7 +44,7 @@ class MetaEnv:
 
 
 
-    def reset(self, prob_random_start : float = 0.5) :
+    def reset(self, prob_random_start : float = 0.5): # just trying this return syntax
         """
         confidence_state, intent_state = env.reset()
         We need to init the object with a set of new intents
@@ -78,8 +82,48 @@ class MetaEnv:
         self.current_slot_state = self.slot_states[-1]
 
 
-    def step(self, action):
-        pass
+    def step(self, action : int):
+        """
+        Addressing the monster in the room, this is the holy grail of the whole system
+        :param action: The primitive action that is supposed to be taken
+        :return: Returns a tuple of [next_confidence_state, intent_state] , intrinsic_reward, goal_reached , done
+        Rules and Assumptions
+        1. Whenever I recieve a terminating action for a subgoal i.e. the 19 action i will move onto the next intent_state, and also make the goal_reached variable as true
+        2. When I am out of processing the next intents, I will move onto making the done variable as true.
+        3. Whenever an action comes that is out of the reason of the current intent, we won't modify the state, and we will penalize the aciton by coinsidering the negtative reward from a step that will be consumed in doing that step.
+        4. Currently I am also giving the extrinsic reward when taking the terminating action, but we can later remove, thsi , this is done because we need to encourage the agent to somehow learn the terminating action.
+
+        """
+        done = False
+        goal_reached = False
+        new_state = np.copy(self.current_slot_state) # copy the state of the current slot state
+        current_intent = self.current_obj_intent[self.current_intent_no]
+        reward = 0
+        if action == 19:
+            """
+            if the terminating action is picked
+            if all slots are covered above the threshold then award otherwise penalize
+            """
+
+            if self.check_confidence_state(current_intent) :
+                # give full reward
+                reward = self.calculate_external_reward(np.zeros(self.slot_space_size), self.current_slot_state, current_intent)
+            else:
+                reward = -self.calculate_external_reward(self.current_slot_state, np.ones(self.slot_space_size), goal = current_intent)
+            self.current_intent_no += 1
+            if self.current_intent_no >= self.no_intents:
+                done = True
+            else:
+                self.current_intent_state = utils.one_hot(self.current_obj_intent[self.current_intent_no, self.intent_space_size])
+            goal_reached = True
+            return [self.current_slot_state, self.current_intent_state], reward, goal_reached, done
+        # if not terminating action
+
+
+
+
+
+
 
     def calculate_external_reward(self, start_state : np.ndarray, goal_state : np.ndarray, goal : int):
         """
@@ -90,6 +134,19 @@ class MetaEnv:
         :param goal: The goal currently working for
         :return: return the reward 
         """
-        relevants_slots = impdicts.intent2slots[goal]
-        
+        relevants_slots = impdicts.intent2slots[goal] # this will return the slots to be measured
+        # now we will calculate the differen from both
+        diff_confidence = goal_state[relevants_slots] - start_state[relevants_slots]
+        # now we can multiply by weights
+        return diff_confidence*self.w2 # or we can keep and differnt weight factor for the external agent
 
+    def check_confidence_state(self, goal):
+        """
+        THis function will check all the slots pertaining to the goal and see if its satisfies the threshold, if it does so , it returns a True value, otherwise it returns a false value.
+        :param goal: The goal that its currently checking for
+        :return: True/False
+        Rules & Points :
+        1. I am using the threshold currently to analyze
+        """
+        slots_to_be_checked = impdicts.intent2slots[goal] # these are the slots
+        return all(self.current_slot_state[slots_to_be_checked] > self.threshold)
