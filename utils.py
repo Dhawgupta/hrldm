@@ -57,7 +57,9 @@ def one_hot(point, size):
     Args: 
     point : The place where we want the one to be
     size : The size of the total vector
+    returns : A one dimensional list (i.e. array) of the given number and ots vector
     '''
     vector = np.zeros(size)
     vector[point] = 1.0
-    return np.expand_dims(vector, axis=0)
+    # return np.expand_dims(vector, axis=0) # returns a 2D array
+    return vector

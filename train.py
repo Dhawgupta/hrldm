@@ -15,7 +15,7 @@ CONTROLLER_ACTION_SIZE = 20
 def main():
     ActorExperience = namedtuple("ActorExperience", ["state", "goal", "action", "reward", "next_state", "done"])
     MetaExperience = namedtuple("MetaExperience", ["state", "goal", "reward", "next_state", "done"])
-    env = MetaEnv()
+    env = MetaEnv() # TODO
     agent = hDQN()
     visits = np.zeros((12, 6)) # not required for me
     anneal_factor = (1.0-0.1)/12000
@@ -25,7 +25,7 @@ def main():
         for episode in range(1000): # Loop for each epsidoe
             total_external_reward = 0
             print("\n\n### EPISODE "  + str(episode_thousand*1000 + episode) + "###")
-            confidence_state, intent_state = env.reset()
+            [confidence_state, intent_state] = env.reset() # TODO
             # visits[episode_thousand][state] += 1
             done = False
             goal_reached = False
@@ -41,7 +41,7 @@ def main():
                 
                     action = agent.select_move(confidence_state, utils.one_hot(goal, META_OPTION_SIZE), goal)
                     print("Goal : {}, State : {}, Action : {}".format(goal, confidence_state, action))
-                    next_confidence_state, intrinsic_reward, goal_reached , done = env.step(action) # get the reward at the sub policy level
+                    [next_confidence_state, intent_state] , intrinsic_reward, goal_reached , done = env.step(action) # get the reward at the sub policy level
                     # visits[episode_thousand][next_state-1] += 1
                     # intrinsic_reward = agent.criticize(goal, next_state)
                     # goal_reached = next_state == goal
