@@ -8,7 +8,7 @@ import random
 import utils
 import impdicts
 from typing import List, Tuple, Dict
-
+import sys
 class MetaEnv:
 
     def __init__(self, w1 : float=  1, w2 : float = 8, w3 : float = 13,   intent_space_size : int = 5, slot_space_size : int  =  8, options_space : int = 5, primitive_action_space : int = 20 ):
@@ -107,10 +107,10 @@ class MetaEnv:
 
             if self.check_confidence_state(current_intent) :
                 # give full reward
-                reward = self.calculate_external_reward(np.zeros(self.slot_space_size), self.current_slot_state, current_intent)
+                reward = self.w2*self.calculate_external_reward(np.zeros(self.slot_space_size), self.current_slot_state, current_intent)
             else:
-                reward = -self.calculate_external_reward(self.current_slot_state, np.ones(self.slot_space_size), goal = current_intent)
-            self.current_intent_no += 1
+                reward = -self.w2*self.calculate_external_reward(self.current_slot_state, np.ones(self.slot_space_size), goal = current_intent)
+            self.current_intent_no += 1 # if all the intents in the current object are over
             if self.current_intent_no >= self.no_intents:
                 done = True
             else:
@@ -118,12 +118,38 @@ class MetaEnv:
             goal_reached = True
             return [self.current_slot_state, self.current_intent_state], reward, goal_reached, done
         # if not terminating action
+        relevant_actions : List[int] = impdicts.intent2action[current_intent]
+        if action not in relevant_actions:
+            reward = -self.w1
+        else:
+            if action in impdicts.askActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    new_state[slot] = 0.2*random.random() + 0.55
+                # pass # here the action will be same as the slot number
+            elif action in impdicts.reaskActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    if new_state[slot] < 0.1:
+                        pass
+                    else:
+                        new_state[slot] = (1 - new_state[slot])*0.85 + new_state[slot]
+                # pass # Use the index of the list to
+            elif action in impdicts.hybridActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    new_state[slot] = 0.2*random.random() + 0.55
+                # pass # The hybrid action
+            else:
+                print("Wrong action picked up please see the system.\nExiting.....")
+                sys.exit()
+                # pass # put an error message in the same
+            # calculate the reward
+            reward = self.w2*self.calculate_external_reward(self.current_slot_state, new_state, current_intent) - self.w1 # get the reward for increase in confidecne and the decrrease in iteration
+            # Although the calculate external reward is not required as we are already cross checking the things in the first if condition
 
-
-
-
-
-
+        self.current_intent_state = np.copy(new_state)
+        return [ self.current_intent_state, self.current_intent_state], reward, False, False
 
     def calculate_external_reward(self, start_state : np.ndarray, goal_state : np.ndarray, goal : int):
         """
@@ -138,7 +164,7 @@ class MetaEnv:
         # now we will calculate the differen from both
         diff_confidence = goal_state[relevants_slots] - start_state[relevants_slots]
         # now we can multiply by weights
-        return diff_confidence*self.w2 # or we can keep and differnt weight factor for the external agent
+        return diff_confidence # or we can keep and differnt weight factor for the external agent
 
     def check_confidence_state(self, goal):
         """
