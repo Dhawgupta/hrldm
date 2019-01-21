@@ -32,6 +32,10 @@ This will need other set of actions which will include showing the availabel tra
 Case 1 : The Agent knows the Ground Service City and can put the appropraite options forward
 Case 2 : The agent does not know the transport city and will put the options forward after asking the appropriate city. (if this also becomces a request slot , then there can be an issue in this )
 
+### Date : 20/1/19
+1. I think we need to separate the `internal_step` and the `external_step` functions in the enviornmental , because what is happening that the supposed for a given intent `i` in meta policy, it selects and option `j`. Now when we enter the step function , I use the goal from the env pre set values. i.e. the goal is set to `i` and bacuse of this actions pertaining to policy of `j` when taken  are not propely rewarded. **1**. So what we need to do is separate the step functions of the meta-action and primitive actions.
+
+2. **Line of action** : So when we call the meta.predict function, this will return an option to be followed. After selecting that option we will use the toption selected in all the internal_step transition as an input only. After the end of the sub goal we will take a step from `meta-step` function, and return the appropriate reward
 
 <!-- # To Continue 
 Continie from line 60 in the train code and set an appropritate annealing factor for the meta and controller policy which can take into account the intital bad controller policies and and hence have low annealing factor in the starting but as a the training progress the annesling factor adjusts accordingly -->

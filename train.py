@@ -28,36 +28,38 @@ def main():
             [confidence_state, intent_state] = env.reset() # TODO
             # visits[episode_thousand][state] += 1
             done = False
-            goal_reached = False
-            while not done and not goal_reached: # The Loop i whcih meta policy acts
+            while not done: # The Loop i whcih meta policy acts
                 goal = agent.select_goal(intent_state)
-                agent.goal_selected[goal] += 1
                 print("Meta State: {} , Options Selected : {}".format(intent_state, goal))
                 external_reward = 0
                 goal_reached = False
                 goal_start_state = confidence_state # the starting state in the beginning of a goal
                 # Loop in which a sub policy acts for a goal
-                while not done and not goal_reached: #TODO currently I am not using the goal_reached flag in my implmementation 
-                
+                env.meta_step_start(goal)
+                print("##Entering Controller for {} ## ".format(impdicts.indx2intent[goal]))
+                goal_iter = 0
+                while not goal_reached:
                     action = agent.select_move(confidence_state, utils.one_hot(goal, META_OPTION_SIZE), goal)
+                    if action == 19:
+                        print("##ENDING ACTION PICKED")
+                    print("Epsiode : {}".format(episode + episode_thousand*1000))
                     print("Goal : {}, State : {}, Action : {}".format(goal, confidence_state, action))
-                    [next_confidence_state, intent_state] , intrinsic_reward, goal_reached , done = env.step(action) # get the reward at the sub policy level
-                    # visits[episode_thousand][next_state-1] += 1
-                    # intrinsic_reward = agent.criticize(goal, next_state)
-                    # goal_reached = next_state == goal
-                    # if goal_reached:
-                    #     agent.goal_success[goal-1] += 1
-                    #     print("Goal reached!! ")
-                    # we will assume when the sdubgoal to be done we will calculate the extrinsic reward
+                    next_confidence_state, intrinsic_reward, goal_reached  = env.controller_step(goal,action) # get the reward at the sub policy level
                     exp = ActorExperience(confidence_state,  utils.one_hot(goal, META_OPTION_SIZE), action, intrinsic_reward, next_confidence_state, done)
+                    print(exp)
                     agent.store(exp, meta=False)
                     agent.update(meta=False)
                     agent.update(meta=True)
                     confidence_state = next_confidence_state
+                    # if goal_iter%100 == 0:
+                    print("Goal Iteration : {}".format(goal_iter))
+                    goal_iter += 1
                 # calculate the Meta Reward
                 goal_end_state = confidence_state # the ending state in a goal
-                external_reward = env.calculate_external_reward(goal_start_state, goal_end_state, goal)
-                exp = MetaExperience(goal_start_state,  utils.one_hot(goal, META_OPTION_SIZE), external_reward, goal_end_state, done)
+                next_intent , external_reward, done = env.meta_step_end(goal)
+                # external_reward = env.calculate_external_reward(goal_start_state, goal_end_state, goal)
+                exp = MetaExperience(intent_state,  goal, external_reward, next_intent, done)
+                intent_state = next_intent
                 agent.store(exp, meta=True)
                 total_external_reward += external_reward                
                 #Annealing 
@@ -73,7 +75,7 @@ def main():
                 if(agent.actor_epsilon[goal] < 0.1):
                     agent.actor_epsilon[goal] = 0.1
                 print("meta_epsilon: " + str(agent.meta_epsilon))
-                print("actor_epsilon " + str(goal) + ": " + str(agent.actor_epsilon[goal-1]))
+                print("actor_epsilon {}".format(agent.actor_epsilon))
                 
             if (episode % 100 == 99):
                 print("Episodes : {}".format(episode + episode_thousand*1000))

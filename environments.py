@@ -28,15 +28,15 @@ class MetaEnv:
         self.slot_space_size = slot_space_size
         self.options_space = options_space
         self.primitive_action_space = primitive_action_space
-
         self.current_obj_intent =[] # This shows all the intents that have to be served in this object
         self.slot_states = []
         self.current_intent_state= []
-        self.current_slot_state = []
+        self.current_slot_state = np.array([])
         self.current_intent_no = 0
         self.no_intents = 0 # the number of intents to be served i.e. len(self.current_obj_intent)
         self.goal_iter = [] # The number of iterations done for each subgoal completion
         self.reset()
+        self.latest_start_confidence_start = [] # Store the last confidnce state before the start of the option play for the subpolicy
         # self.slot_states # this is the list of all the slot states encountered in runs
         # self.current_slot_state # this is state of the confidence values in the current context
         # self.current_intent_state # This contains the current intent that the env is focusing on (currently a one hot vector later, maybe changed to a composite of multiple intents
@@ -94,10 +94,12 @@ class MetaEnv:
         4. Currently I am also giving the extrinsic reward when taking the terminating action, but we can later remove, thsi , this is done because we need to encourage the agent to somehow learn the terminating action.
 
         """
+        print("Env Step")
         done = False
         goal_reached = False
         new_state = np.copy(self.current_slot_state) # copy the state of the current slot state
         current_intent = self.current_obj_intent[self.current_intent_no]
+        print("Step : Current Intent : {}".format(current_intent))
         reward = 0
         if action == 19:
             """
@@ -117,6 +119,7 @@ class MetaEnv:
                 self.current_intent_state = utils.one_hot(self.current_obj_intent[self.current_intent_no, self.intent_space_size])
             goal_reached = True
             return [self.current_slot_state, self.current_intent_state], reward, goal_reached, done
+
         # if not terminating action
         relevant_actions : List[int] = impdicts.intent2action[current_intent]
         if action not in relevant_actions:
@@ -151,7 +154,107 @@ class MetaEnv:
         self.current_intent_state = np.copy(new_state)
         return [ self.current_intent_state, self.current_intent_state], reward, False, False
 
-    def calculate_external_reward(self, start_state : np.ndarray, goal_state : np.ndarray, goal : int):
+    def controller_step(self, goal, action):
+        """
+
+        :param goal: The goal the controller is fulfilling to appropriately reward it
+        :param action: : The action that the agent is taking pertaining to that goal
+        :return: next_confidence_state, reward, goal_completed
+        """
+        print("Env Controller Step")
+        # done = False
+        goal_reached = False
+        new_state = np.copy(self.current_slot_state)  # copy the state of the current slot state
+        current_intent = goal
+        print("Step : Current Intent : {}".format(current_intent))
+        reward = 0
+        if action == 19:
+            """
+            if the terminating action is picked
+            if all slots are covered above the threshold then award otherwise penalize
+            """
+
+            if self.check_confidence_state(current_intent):
+                # give full reward
+                reward = self.w2 * self.calculate_external_reward(np.zeros(self.slot_space_size),
+                                                                  self.current_slot_state, current_intent)
+            else:
+                reward = -self.w2 * self.calculate_external_reward(self.current_slot_state,
+                                                                   np.ones(self.slot_space_size), goal=current_intent)
+            # shifting the below part in the meta step acitons
+            # self.current_intent_no += 1  # if all the intents in the current object are over
+
+            goal_reached = True
+            return self.current_slot_state, reward, goal_reached,
+
+        # if not terminating action
+        relevant_actions: List[int] = impdicts.intent2action[current_intent]
+        if action not in relevant_actions:
+            reward = -self.w1
+        else:
+            if action in impdicts.askActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    new_state[slot] = 0.2 * random.random() + 0.55
+                # pass # here the action will be same as the slot number
+            elif action in impdicts.reaskActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    if new_state[slot] < 0.1:
+                        pass
+                    else:
+                        new_state[slot] = (1 - new_state[slot]) * 0.85 + new_state[slot]
+                # pass # Use the index of the list to
+            elif action in impdicts.hybridActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    new_state[slot] = 0.2 * random.random() + 0.55
+                # pass # The hybrid action
+            else:
+                print("Wrong action picked up please see the system.\nExiting.....")
+                sys.exit()
+                # pass # put an error message in the same
+            # calculate the reward
+            reward = self.w2 * self.calculate_external_reward(self.current_slot_state, new_state,
+                                                              current_intent) - self.w1  # get the reward for increase in confidecne and the decrrease in iteration
+            # Although the calculate external reward is not required as we are already cross checking the things in the first if condition
+
+        self.current_slot_state = np.copy(new_state)
+        return self.current_slot_state, reward, False
+
+    def meta_step_start(self,option):
+        """
+        This will be responsible for storing the current_confidence-state, to make a comparison with the same in the future
+        :param option: Take as intput the option chosed by the meta policy
+        :return: return the current confidence state of the dialogue
+        """
+        # store the current_confidence state
+        self.latest_start_confidence_start = np.copy(self.current_slot_state)
+        return self.latest_start_confidence_start
+
+    def meta_step_end(self, option) -> Tuple[int, float, bool]  :
+        """
+
+        :param option: The option chosen
+        :return: return the  next intent, reward, done (still skeptical about returning the confidence state)
+        Points :
+        Currently the rewards a really simple, they dont penalize for filling other slots that might not be relevant. We can penalize these states in the future by subtracting the extra sltos filled
+        """
+        done = False
+        reward = 0
+        current_intent = self.current_obj_intent[self.current_intent_no]
+        reward = self.w2*self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, current_intent)
+        self.current_intent_no += 1  # if all the intents in the current object are over
+        new_intent = current_intent
+        if self.current_intent_no >= self.no_intents:
+            done = True
+        else:
+            self.current_intent_state = utils.one_hot(
+                self.current_obj_intent[self.current_intent_no], self.intent_space_size)
+            new_intent = self.current_obj_intent[self.current_intent_no]
+        return self.current_intent_state, reward, done
+
+    def calculate_external_reward(self, start_state : np.ndarray, goal_state : np.ndarray, goal : int) -> float :
         """
         This function is supposed to check the goal and then check the progress
         in the confidence values of the slots positions with respect to that goal
@@ -162,7 +265,7 @@ class MetaEnv:
         """
         relevants_slots = impdicts.intent2slots[goal] # this will return the slots to be measured
         # now we will calculate the differen from both
-        diff_confidence = goal_state[relevants_slots] - start_state[relevants_slots]
+        diff_confidence = np.sum(goal_state[relevants_slots] - start_state[relevants_slots])
         # now we can multiply by weights
         return diff_confidence # or we can keep and differnt weight factor for the external agent
 
