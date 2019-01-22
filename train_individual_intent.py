@@ -16,7 +16,11 @@ def main():
     # ActorExperience = namedtuple("ActorExperience", ["state", "goal", "action", "reward", "next_state", "done"])
     # MetaExperience = namedtuple("MetaExperience", ["state", "goal", "reward", "next_state", "done"])
     env = ControllerEnv()  # TODO
-    agent = DQNAgent(state_size=CONTROLLER_STATE_SIZE, )
+    agent = DQNAgent(state_size=CONTROLLER_STATE_SIZE ,action_size= CONTROLLER_ACTION_SIZE, hiddenLayers=[30,30,30] )
+
+    # def __init__(self, state_size, action_size, hiddenLayers=[], dropout=0.1, activation='relu', loadname=None,
+    #              saveIn=False, learningRate=0.01, discountFactor=0.9,
+    #              epsilon=None):
     visits = np.zeros((12, 6))  # not required for me
     anneal_factor = (1.0 - 0.1) / 12000
     print("Annealing factor: " + str(anneal_factor))

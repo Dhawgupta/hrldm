@@ -19,7 +19,7 @@ from SumTree1 import SumTree
 class Memory:   # stored as ( s, a, r, s_ ) in SumTree
     e = 0.01
     a = 0.6
-    print("in memeory")
+    print("in memory")
     def __init__(self, capacity):
         self.tree = SumTree(capacity)
 
@@ -51,7 +51,7 @@ class Memory:   # stored as ( s, a, r, s_ ) in SumTree
 
 class DQNAgent:
     def __init__(self, state_size, action_size, hiddenLayers=[], dropout=0.1, activation='relu', loadname=None,
-                 saveIn=False, learningRate=0.01, discountFactor=0.7,
+                 saveIn=False, learningRate=0.01, discountFactor=0.9,
                  epsilon=None):  # the file to load is provided if requirede
         # saveIn is providded if to store the model in from which we load it
         print("in init")
@@ -185,7 +185,7 @@ class DQNAgent:
             i=i+1
             sum1=sum1+elem
         avr=sum1/i
-	    return avr
+        return avr
 
     def rem_rew(self, reward):
         self.memory1.append((reward))

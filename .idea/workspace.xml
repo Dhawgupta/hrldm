@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="231d272e-6d65-4ab2-8239-fad87149507a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/train_individual_intent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs.md" beforeDir="false" afterPath="$PROJECT_DIR$/Logs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dqn.py" beforeDir="false" afterPath="$PROJECT_DIR$/dqn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/environments.py" beforeDir="false" afterPath="$PROJECT_DIR$/environments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DQN1.py" beforeDir="false" afterPath="$PROJECT_DIR$/DQN1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_individual_intent.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_individual_intent.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,8 +58,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hDQN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1465">
-              <caret line="224" column="22" selection-start-line="224" selection-start-column="22" selection-end-line="224" selection-end-column="22" />
+            <state relative-caret-position="243">
+              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+              <folding>
+                <element signature="e#445#458#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -70,8 +70,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="47" column="27" selection-end-line="84" />
+            <state relative-caret-position="351">
+              <caret line="16" column="88" selection-start-line="16" selection-start-column="88" selection-end-line="16" selection-end-column="88" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -82,8 +82,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train_individual_intent.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="18" column="55" selection-start-line="18" selection-start-column="55" selection-end-line="18" selection-end-column="55" />
+            <state relative-caret-position="459">
+              <caret line="18" column="115" selection-start-line="18" selection-start-column="115" selection-end-line="18" selection-end-column="115" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -94,12 +94,19 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DQN1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7857">
-              <caret line="290" column="42" lean-forward="true" selection-start-line="290" selection-start-column="42" selection-end-line="290" selection-end-column="42" />
+            <state relative-caret-position="547">
+              <caret line="290" column="28" selection-start-line="290" selection-start-column="23" selection-end-line="290" selection-end-column="28" />
               <folding>
                 <element signature="e#193#206#0" expanded="true" />
               </folding>
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SumTree1.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-567" />
           </provider>
         </entry>
       </file>
@@ -114,8 +121,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>utils.one_hot</find>
-      <find>utils.one</find>
       <find>slot_states</find>
       <find>slots_</find>
       <find>slots</find>
@@ -142,6 +147,10 @@
       <find>env</find>
       <find>select_move</find>
       <find>epsilon</find>
+      <find>saveIn</find>
+      <find>saveInLoaded</find>
+      <find>save</find>
+      <find>save(</find>
     </findStrings>
     <replaceStrings>
       <replace>slot</replace>
@@ -159,12 +168,12 @@
         <option value="$PROJECT_DIR$/hDQN.py" />
         <option value="$PROJECT_DIR$/Logs.md" />
         <option value="$PROJECT_DIR$/environments.py" />
-        <option value="$PROJECT_DIR$/train_individual_intent.py" />
         <option value="$PROJECT_DIR$/DQN1.py" />
+        <option value="$PROJECT_DIR$/train_individual_intent.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="311" />
     <option name="y" value="53" />
     <option name="width" value="1400" />
@@ -228,10 +237,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.17913593" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -250,7 +259,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -284,23 +293,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hDQN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1465">
-          <caret line="224" column="22" selection-start-line="224" selection-start-column="22" selection-end-line="224" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="47" column="27" selection-end-line="84" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Logs.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -331,10 +323,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/hDQN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#445#458#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SumTree1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-567" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="16" column="88" selection-start-line="16" selection-start-column="88" selection-end-line="16" selection-end-column="88" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/train_individual_intent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="18" column="55" selection-start-line="18" selection-start-column="55" selection-end-line="18" selection-end-column="55" />
+        <state relative-caret-position="459">
+          <caret line="18" column="115" selection-start-line="18" selection-start-column="115" selection-end-line="18" selection-end-column="115" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -343,8 +360,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DQN1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7857">
-          <caret line="290" column="42" lean-forward="true" selection-start-line="290" selection-start-column="42" selection-end-line="290" selection-end-column="42" />
+        <state relative-caret-position="547">
+          <caret line="290" column="28" selection-start-line="290" selection-start-column="23" selection-end-line="290" selection-end-column="28" />
           <folding>
             <element signature="e#193#206#0" expanded="true" />
           </folding>
