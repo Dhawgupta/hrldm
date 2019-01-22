@@ -37,5 +37,10 @@ Case 2 : The agent does not know the transport city and will put the options for
 
 2. **Line of action** : So when we call the meta.predict function, this will return an option to be followed. After selecting that option we will use the toption selected in all the internal_step transition as an input only. After the end of the sub goal we will take a step from `meta-step` function, and return the appropriate reward
 
+
+### Date : 22/1/19
+1. I am not having much idea on how to check the progress of the training procdure, I am planning to build and `ControllerEnv` for each sub goal so as to train each goal separately. This will take as input the goal to pursue and have the same primitive action set as the Meta Environment
+
+
 <!-- # To Continue 
 Continie from line 60 in the train code and set an appropritate annealing factor for the meta and controller policy which can take into account the intital bad controller policies and and hence have low annealing factor in the starting but as a the training progress the annesling factor adjusts accordingly -->

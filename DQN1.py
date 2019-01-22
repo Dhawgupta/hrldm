@@ -1,7 +1,6 @@
 """
-Read the DQN1 once and use that for the time being
+According to Diff checker the SumTree1 and SumTree are same and the only DIfference between DQN1 and DQN is the DiscountFactor in the DQN Agent . In DQN1 it is 0.9 and in DQN it is 0.7
 """
-
 import random
 import gym
 import numpy as np
@@ -14,7 +13,7 @@ from keras import optimizers
 from keras.models import load_model
 import time
 
-from SumTree import SumTree
+from SumTree1 import SumTree
 
 
 class Memory:   # stored as ( s, a, r, s_ ) in SumTree
@@ -52,14 +51,14 @@ class Memory:   # stored as ( s, a, r, s_ ) in SumTree
 
 class DQNAgent:
     def __init__(self, state_size, action_size, hiddenLayers=[], dropout=0.1, activation='relu', loadname=None,
-                 saveIn=False, learningRate=0.01, discountFactor=0.9,
+                 saveIn=False, learningRate=0.01, discountFactor=0.7,
                  epsilon=None):  # the file to load is provided if requirede
         # saveIn is providded if to store the model in from which we load it
         print("in init")
         self.state_size = state_size
         self.action_size = action_size
         #self.memory = deque(maxlen=100000)
-	self.memory1 = deque(maxlen=100)
+        self.memory1 = deque(maxlen=100)
         self.gamma = discountFactor  # discount rate
         if epsilon is None:
             self.epsilon = 1.0  # exploration rate
@@ -74,10 +73,10 @@ class DQNAgent:
         self.dropout = dropout
         self.activation = activation
         self.model = self._build_model(self.hiddenLayers, self.dropout, self.activation)
-	self.model_ = self._build_model(self.hiddenLayers, self.dropout, self.activation)
+        self.model_ = self._build_model(self.hiddenLayers, self.dropout, self.activation)
         self.loadname = loadname
         self.saveInLoaded = saveIn
-	self.memory = Memory(200000)
+        self.memory = Memory(200000)
         self.iter = 0  # the amount of model runs and iterations and runs
         if self.loadname is not None:
             self.load(self.loadname)
@@ -125,7 +124,7 @@ class DQNAgent:
         return model
 
     def observe(self, sample):  # in (s, a, r, s_) format
-	print(sample)
+        print(sample)
         x, y, errors = self._getTargets([(0, sample)])
         self.memory.add(errors[0], sample)
 
@@ -141,15 +140,15 @@ class DQNAgent:
         self.model_.set_weights(self.model.get_weights())
 
     def _getTargets(self, batch):
-	print("in targets")
+        print("in targets")
         no_state = np.zeros(self.state_size)
 
         states = np.array([ o[1][0] for o in batch ])
         states_ = np.array([ (no_state if o[1][3] is None else o[1][3]) for o in batch ])
-	#print(states)
-	states = np.reshape(states, (1,5))
-	states_ = np.reshape(states_, (1,5))
-	#print(states.shape)
+        #print(states)
+        states = np.reshape(states, (1,5))
+        states_ = np.reshape(states_, (1,5))
+        #print(states.shape)
         p = self.predict(states)
 
         p_ = self.predict(states_, target=False)
@@ -159,8 +158,8 @@ class DQNAgent:
         y = np.zeros((len(batch), 13))
         errors = np.zeros(len(batch))
         #print(x.shape)
-	#print(y.shape)
-	#print(errors.shape)
+        #print(y.shape)
+        #print(errors.shape)
         for i in range(len(batch)):
             o = batch[i][1]
             s = o[0]; a = o[1]; r = o[2]; s_ = o[3]
@@ -180,15 +179,13 @@ class DQNAgent:
 
 
     def avg_rew(self):
-	sum1=0
-	i=0
-	for elem in self.memory1:
-		i=i+1
-		sum1=sum1+elem
-	avr=sum1/i
-        #print(i)
-        #print(avr)
-	return avr
+        sum1=0
+        i=0
+        for elem in self.memory1:
+            i=i+1
+            sum1=sum1+elem
+        avr=sum1/i
+	    return avr
 
     def rem_rew(self, reward):
         self.memory1.append((reward))
@@ -219,39 +216,31 @@ class DQNAgent:
         return max_key  # returns action
 
     def getTargets(self, batch):
-	print("in new targets")
+        print("in new targets")
         no_state = np.zeros(self.state_size)
 
         states = np.array([ o[1][0] for o in batch ])
         states_ = np.array([ (no_state if o[1][3] is None else o[1][3]) for o in batch ])
-	#print(states)
-	#states = np.reshape(states, (1,5))
-	#states_ = np.reshape(states_, (1,23))
-	#print(states.shape)
-	p=np.zeros((32, 13))
-	#print(p.shape)
-	p_=np.zeros((32, 13))
-	pTarget_=np.zeros((32, 13))
-	for i in range(0,len(states)):
-        	f = self.predict(states[i])
-		p[i]=f
-	#print(p)
-	for i in range(0,len(states_)):
-        	f = self.predict(states_[i],target=False)
-		p_[i]=f
-        #p_ = self.predict(states_, target=False)
-	for i in range(0,len(states_)):
-        	f = self.predict(states_[i],target=True)
-		pTarget_[i]=f
 
-        #pTarget_ = self.predict(states_, target=True)
+        p=np.zeros((32, 13))
+        p_=np.zeros((32, 13))
+        pTarget_=np.zeros((32, 13))
+        for i in range(0,len(states)):
+            f = self.predict(states[i])
+            p[i]=f
+        #print(p)
+        for i in range(0,len(states_)):
+            f = self.predict(states_[i],target=False)
+            p_[i]=f
+            #p_ = self.predict(states_, target=False)
+        for i in range(0,len(states_)):
+            f = self.predict(states_[i],target=True)
+            pTarget_[i]=f
+
 
         x = np.zeros((len(batch), 5))
         y = np.zeros((len(batch), 13))
         errors = np.zeros(len(batch))
-        #print(x.shape)
-	#print(y.shape)
-	#print(errors.shape)
         for i in range(len(batch)):
             o = batch[i][1]
             s = o[0]; a = o[1]; r = o[2]; s_ = o[3]
@@ -270,9 +259,9 @@ class DQNAgent:
         return (x, y, errors)
 
     def replay(self): 
-	BATCH_SIZE = 32   
+        BATCH_SIZE = 32
         batch = self.memory.sample(BATCH_SIZE)
-	#print(batch)
+        #print(batch)
         x, y, errors = self.getTargets(batch)
 
         #update errors
@@ -293,11 +282,11 @@ class DQNAgent:
         # saveIn tells us
         print("saving in .... {}".format(name))
         if (self.loadname is None) or (self.saveInLoaded is False):
-            print "Saving in without loading : {}".format(name)
+            print ("Saving in without loading : {}".format(name))
             # self.model.save_weights(name)
             self.model.save(name)
         elif self.saveInLoaded is True and self.loadname is not None:
-            print "Saving in : {}".format(self.loadname)
+            print ("Saving in : {}".format(self.loadname))
             # self.model.save_weights(self.loadname)
             self.model.save(self.loadname)
         else:

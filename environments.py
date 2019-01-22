@@ -265,7 +265,7 @@ class MetaEnv:
         """
         relevants_slots = impdicts.intent2slots[goal] # this will return the slots to be measured
         # now we will calculate the differen from both
-        diff_confidence = np.sum(goal_state[relevants_slots] - start_state[relevants_slots])
+        diff_confidence: float = np.sum(goal_state[relevants_slots] - start_state[relevants_slots])
         # now we can multiply by weights
         return diff_confidence # or we can keep and differnt weight factor for the external agent
 
@@ -279,3 +279,135 @@ class MetaEnv:
         """
         slots_to_be_checked = impdicts.intent2slots[goal] # these are the slots
         return all(self.current_slot_state[slots_to_be_checked] > self.threshold)
+
+# prepare and environment to train a separate conteroller
+class ControllerEnv:
+    def __init__(self, goal = 0, w1 = 1, w2 = 8, w3 = 0, slot_space_size = 8, options_space = 5, primitive_action_space = 20, goal_space_size = 5): # The default goal
+        self.goal = goal
+        self.threshold = 0.7
+        self.w1 = w1
+        self.w2 = w2
+        self.w3 = w3  # probably will not be using this
+        self.slot_space_size = slot_space_size
+        self.options_space = options_space
+        self.primitive_action_space = primitive_action_space
+        self.slot_states = []
+        self.current_goal_state = []
+        self.current_slot_state = np.array([])
+        self.goal_space_size = goal_space_size
+        self.goal = goal
+        self.goal_iter = []  # The number of iterations done for each subgoal completion
+        self.reset(goal = goal)
+
+    def reset(self, goal= 0, state = None, prob_random_start : float = 0.5):
+        self.goal = goal
+
+        if random.random() < prob_random_start:
+            # do a random init
+            self.random_state_init()
+        else:
+            self.state_init()
+        # now we will set the intital intent state of the system and also the buffer to store the intent states
+        self.goal = goal  # Keeps track of the intent number being served
+        self.goal_state = np.array([utils.one_hot(self.goal,self.goal_space_size)])  # setting the starting intent
+        self.current_goal_state = self.goal_state[-1]
+        return [self.current_slot_state, self.current_goal_state]
+
+    def random_state_init(self):
+        self.slot_states = np.array([[random.random() for i in range(self.slot_space_size)]])
+        self.current_slot_state = self.slot_states[-1]
+
+    def state_init(self):
+        self.slot_states = np.zeros((1, self.slot_space_size))  # initliase with zero for all values
+        self.current_slot_state = self.slot_states[-1]
+
+    def check_confidence_state(self, goal):
+        """
+        THis function will check all the slots pertaining to the goal and see if its satisfies the threshold, if it does so , it returns a True value, otherwise it returns a false value.
+        :param goal: The goal that its currently checking for
+        :return: True/False
+        Rules & Points :
+        1. I am using the threshold currently to analyze
+        """
+        slots_to_be_checked = impdicts.intent2slots[goal] # these are the slots
+        return all(self.current_slot_state[slots_to_be_checked] > self.threshold)
+
+    def calculate_external_reward(self, start_state : np.ndarray, goal_state : np.ndarray, goal : int) -> float :
+        """
+        This function is supposed to check the goal and then check the progress
+        in the confidence values of the slots positions with respect to that goal
+        :param start_state: The starting state of the confidence values of options
+        :param goal_state: The ending state of the confidence values of the options
+        :param goal: The goal currently working for
+        :return: return the reward
+        """
+        goal = self.goal
+        relevants_slots = impdicts.intent2slots[goal] # this will return the slots to be measured
+        # now we will calculate the differen from both
+        diff_confidence: float = np.sum(goal_state[relevants_slots] - start_state[relevants_slots])
+        # now we can multiply by weights
+        return diff_confidence # or we can keep and differnt weight factor for the external agent
+
+
+    def step(self, action):
+        print("Env Controller Step")
+        # done = False
+        goal_reached = False
+        new_state = np.copy(self.current_slot_state)  # copy the state of the current slot state
+        current_intent = self.goal
+        print("Step : Current Intent : {}".format(current_intent))
+        reward = 0
+        if action == 19:
+            """
+            if the terminating action is picked
+            if all slots are covered above the threshold then award otherwise penalize
+            """
+
+            if self.check_confidence_state(current_intent):
+                # give full reward
+                reward = self.w2 * self.calculate_external_reward(np.zeros(self.slot_space_size),
+                                                                  self.current_slot_state, current_intent)
+            else:
+                reward = -self.w2 * self.calculate_external_reward(self.current_slot_state,
+                                                                   np.ones(self.slot_space_size), goal=current_intent)
+            # shifting the below part in the meta step acitons
+            # self.current_intent_no += 1  # if all the intents in the current object are over
+
+            goal_reached = True
+            return self.current_slot_state, reward, goal_reached,
+
+        # if not terminating action
+        relevant_actions: List[int] = impdicts.intent2action[current_intent]
+        if action not in relevant_actions:
+            reward = -self.w1
+        else:
+            if action in impdicts.askActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    new_state[slot] = 0.2 * random.random() + 0.55
+                # pass # here the action will be same as the slot number
+            elif action in impdicts.reaskActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    if new_state[slot] < 0.1:
+                        pass
+                    else:
+                        new_state[slot] = (1 - new_state[slot]) * 0.85 + new_state[slot]
+                # pass # Use the index of the list to
+            elif action in impdicts.hybridActions:
+                slots = impdicts.action2slots[action]
+                for slot in slots:
+                    new_state[slot] = 0.2 * random.random() + 0.55
+                # pass # The hybrid action
+            else:
+                print("Wrong action picked up please see the system.\nExiting.....")
+                sys.exit()
+                # pass # put an error message in the same
+            # calculate the reward
+            reward = self.w2 * self.calculate_external_reward(self.current_slot_state, new_state,
+                                                              current_intent) - self.w1
+
+
+        self.current_slot_state = np.copy(new_state)
+        return self.current_slot_state, reward, False
+
