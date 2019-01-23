@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="231d272e-6d65-4ab2-8239-fad87149507a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DQN1.py" beforeDir="false" afterPath="$PROJECT_DIR$/DQN1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs.md" beforeDir="false" afterPath="$PROJECT_DIR$/Logs.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train_individual_intent.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_individual_intent.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,7 +18,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/environments.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="446">
+            <state relative-caret-position="6551">
               <caret line="371" column="55" selection-start-line="371" selection-start-column="54" selection-end-line="371" selection-end-column="55" />
               <folding>
                 <element signature="e#78#96#0" expanded="true" />
@@ -29,8 +31,8 @@
         <entry file="file://$PROJECT_DIR$/Logs.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="819">
-                <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+              <first_editor relative-caret-position="549">
+                <caret line="52" selection-start-line="52" selection-end-line="52" />
               </first_editor>
               <second_editor />
             </state>
@@ -58,8 +60,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hDQN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="486">
+              <caret line="133" column="48" selection-start-line="133" selection-start-column="48" selection-end-line="133" selection-end-column="89" />
               <folding>
                 <element signature="e#445#458#0" expanded="true" />
               </folding>
@@ -79,11 +81,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/train_individual_intent.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="18" column="115" selection-start-line="18" selection-start-column="115" selection-end-line="18" selection-end-column="115" />
+            <state relative-caret-position="1944">
+              <caret line="68" column="74" selection-start-line="68" selection-start-column="74" selection-end-line="68" selection-end-column="74" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -91,11 +93,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DQN1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="547">
-              <caret line="290" column="28" selection-start-line="290" selection-start-column="23" selection-end-line="290" selection-end-column="28" />
+            <state relative-caret-position="83">
+              <caret line="212" column="47" selection-start-line="212" selection-start-column="40" selection-end-line="212" selection-end-column="47" />
               <folding>
                 <element signature="e#193#206#0" expanded="true" />
               </folding>
@@ -121,10 +123,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>slot_states</find>
-      <find>slots_</find>
-      <find>slots</find>
-      <find>one_hot</find>
       <find>list</find>
       <find>List</find>
       <find>int</find>
@@ -138,19 +136,23 @@
       <find>-1</find>
       <find>print(exp</find>
       <find>reward</find>
-      <find>action</find>
       <find>calculate_external_reward</find>
       <find>current_slot</find>
       <find>MetaExperience</find>
       <find>print</find>
       <find>current_obj_intent</find>
       <find>env</find>
-      <find>select_move</find>
-      <find>epsilon</find>
       <find>saveIn</find>
       <find>saveInLoaded</find>
       <find>save</find>
+      <find>action</find>
       <find>save(</find>
+      <find>epislon</find>
+      <find>act</find>
+      <find>sample</find>
+      <find>observe</find>
+      <find>select_move</find>
+      <find>epsilon</find>
     </findStrings>
     <replaceStrings>
       <replace>slot</replace>
@@ -166,14 +168,14 @@
         <option value="$PROJECT_DIR$/impdicts.py" />
         <option value="$PROJECT_DIR$/train.py" />
         <option value="$PROJECT_DIR$/hDQN.py" />
-        <option value="$PROJECT_DIR$/Logs.md" />
         <option value="$PROJECT_DIR$/environments.py" />
+        <option value="$PROJECT_DIR$/Logs.md" />
         <option value="$PROJECT_DIR$/DQN1.py" />
         <option value="$PROJECT_DIR$/train_individual_intent.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="311" />
     <option name="y" value="53" />
     <option name="width" value="1400" />
@@ -237,7 +239,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.17913593" />
@@ -286,49 +288,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/impdicts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
-          <caret line="74" column="18" selection-start-line="74" selection-start-column="18" selection-end-line="74" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Logs.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="819">
-            <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/environments.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="371" column="55" selection-start-line="371" selection-start-column="54" selection-end-line="371" selection-end-column="55" />
-          <folding>
-            <element signature="e#78#96#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DQN.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-216">
           <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
           <folding>
             <element signature="e#60#73#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hDQN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="e#445#458#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -348,22 +313,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train_individual_intent.py">
+    <entry file="file://$PROJECT_DIR$/Logs.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="549">
+            <caret line="52" selection-start-line="52" selection-end-line="52" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/impdicts.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="18" column="115" selection-start-line="18" selection-start-column="115" selection-end-line="18" selection-end-column="115" />
+        <state relative-caret-position="709">
+          <caret line="74" column="18" selection-start-line="74" selection-start-column="18" selection-end-line="74" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/environments.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6551">
+          <caret line="371" column="55" selection-start-line="371" selection-start-column="54" selection-end-line="371" selection-end-column="55" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#78#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hDQN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="133" column="48" selection-start-line="133" selection-start-column="48" selection-end-line="133" selection-end-column="89" />
+          <folding>
+            <element signature="e#445#458#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DQN1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="290" column="28" selection-start-line="290" selection-start-column="23" selection-end-line="290" selection-end-column="28" />
+        <state relative-caret-position="83">
+          <caret line="212" column="47" selection-start-line="212" selection-start-column="40" selection-end-line="212" selection-end-column="47" />
           <folding>
             <element signature="e#193#206#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train_individual_intent.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1944">
+          <caret line="68" column="74" selection-start-line="68" selection-start-column="74" selection-end-line="68" selection-end-column="74" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -123,7 +123,13 @@ class DQNAgent:
         model.summary()
         return model
 
-    def observe(self, sample):  # in (s, a, r, s_) format
+    def observe(self, sample,epsilon = None):  # in (s, a, r, s_) format
+        """
+
+        :param sample:
+        :param epsilon: (optional) Required to manage mulitple epislon for different intents, introduced for HRL thing
+        :return: None if using the internal epislon, else return epsilon
+        """
         print(sample)
         x, y, errors = self._getTargets([(0, sample)])
         self.memory.add(errors[0], sample)
@@ -133,9 +139,14 @@ class DQNAgent:
 
         # slowly decrease Epsilon based on our eperience
         self.iter += 1
-        if self.epsilon > self.epsilon_min:
-            self.epsilon -= self.epsilon_decay
-
+        if epsilon is None:
+            if self.epsilon > self.epsilon_min:
+                self.epsilon -= self.epsilon_decay
+            return None
+        else:
+            if epsilon > self.epsilon_min:
+                epsilon -= self.epsilon_decay
+            return epsilon
     def updateTargetModel(self):
         self.model_.set_weights(self.model.get_weights())
 
@@ -196,10 +207,15 @@ class DQNAgent:
         else:
             return self.model.predict(s)
 
-    def act(self, state, all_act):
+    def act(self, state, all_act, epsilon = None):
         # print("in act")
-        if np.random.rand() <= self.epsilon:
-            return random.choice(all_act)
+        if epsilon is None:
+            if np.random.rand() <= self.epsilon:
+                return random.choice(all_act)
+        else:
+            if np.random.rand() <= epsilon:
+                return random.choice(all_act)
+
         act_values = self.model.predict(state)
         max_key = all_act[0]
         max_val = act_values[0, max_key]
@@ -271,6 +287,7 @@ class DQNAgent:
 
         self.model.fit(x, y, batch_size=32, epochs=1, verbose=0)
 
+    # def load(self, name):
     def load(self, name):
         print("in load")
         print("Loading the model {} ".format(name))
