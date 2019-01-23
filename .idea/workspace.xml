@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="231d272e-6d65-4ab2-8239-fad87149507a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DQN1.py" beforeDir="false" afterPath="$PROJECT_DIR$/DQN1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs.md" beforeDir="false" afterPath="$PROJECT_DIR$/Logs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environments.py" beforeDir="false" afterPath="$PROJECT_DIR$/environments.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train_individual_intent.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_individual_intent.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,8 +17,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/environments.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6551">
-              <caret line="371" column="55" selection-start-line="371" selection-start-column="54" selection-end-line="371" selection-end-column="55" />
+            <state relative-caret-position="677">
+              <caret line="356" column="24" selection-start-line="356" selection-start-column="24" selection-end-line="356" selection-end-column="24" />
               <folding>
                 <element signature="e#78#96#0" expanded="true" />
               </folding>
@@ -60,7 +59,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hDQN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
+            <state relative-caret-position="517">
               <caret line="133" column="48" selection-start-line="133" selection-start-column="48" selection-end-line="133" selection-end-column="89" />
               <folding>
                 <element signature="e#445#458#0" expanded="true" />
@@ -84,8 +83,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/train_individual_intent.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1944">
-              <caret line="68" column="74" selection-start-line="68" selection-start-column="74" selection-end-line="68" selection-end-column="74" />
+            <state relative-caret-position="281">
+              <caret line="56" column="26" selection-start-line="56" selection-start-column="26" selection-end-line="56" selection-end-column="26" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -96,8 +95,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DQN1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="83">
-              <caret line="212" column="47" selection-start-line="212" selection-start-column="40" selection-end-line="212" selection-end-column="47" />
+            <state relative-caret-position="281">
+              <caret line="260" column="26" selection-start-line="260" selection-start-column="26" selection-end-line="260" selection-end-column="26" />
               <folding>
                 <element signature="e#193#206#0" expanded="true" />
               </folding>
@@ -123,10 +122,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>list</find>
-      <find>List</find>
-      <find>int</find>
-      <find>current_intent_state</find>
       <find>self.current_intent_no</find>
       <find>step</find>
       <find>state</find>
@@ -151,8 +146,12 @@
       <find>act</find>
       <find>sample</find>
       <find>observe</find>
-      <find>select_move</find>
       <find>epsilon</find>
+      <find>todo</find>
+      <find>5</find>
+      <find>13</find>
+      <find>select_move</find>
+      <find>e</find>
     </findStrings>
     <replaceStrings>
       <replace>slot</replace>
@@ -168,8 +167,8 @@
         <option value="$PROJECT_DIR$/impdicts.py" />
         <option value="$PROJECT_DIR$/train.py" />
         <option value="$PROJECT_DIR$/hDQN.py" />
-        <option value="$PROJECT_DIR$/environments.py" />
         <option value="$PROJECT_DIR$/Logs.md" />
+        <option value="$PROJECT_DIR$/environments.py" />
         <option value="$PROJECT_DIR$/DQN1.py" />
         <option value="$PROJECT_DIR$/train_individual_intent.py" />
       </list>
@@ -332,17 +331,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/environments.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6551">
-          <caret line="371" column="55" selection-start-line="371" selection-start-column="54" selection-end-line="371" selection-end-column="55" />
+        <state relative-caret-position="677">
+          <caret line="356" column="24" selection-start-line="356" selection-start-column="24" selection-end-line="356" selection-end-column="24" />
           <folding>
             <element signature="e#78#96#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/DQN1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="260" column="26" selection-start-line="260" selection-start-column="26" selection-end-line="260" selection-end-column="26" />
+          <folding>
+            <element signature="e#193#206#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/hDQN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
+        <state relative-caret-position="517">
           <caret line="133" column="48" selection-start-line="133" selection-start-column="48" selection-end-line="133" selection-end-column="89" />
           <folding>
             <element signature="e#445#458#0" expanded="true" />
@@ -350,20 +359,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DQN1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="212" column="47" selection-start-line="212" selection-start-column="40" selection-end-line="212" selection-end-column="47" />
-          <folding>
-            <element signature="e#193#206#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/train_individual_intent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1944">
-          <caret line="68" column="74" selection-start-line="68" selection-start-column="74" selection-end-line="68" selection-end-column="74" />
+        <state relative-caret-position="281">
+          <caret line="56" column="26" selection-start-line="56" selection-start-column="26" selection-end-line="56" selection-end-column="26" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

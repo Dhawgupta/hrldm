@@ -22,8 +22,9 @@ def main():
     epsilons = np.ones([META_OPTION_SIZE])
     env = ControllerEnv()  # TODO
     EPISODES = 12000
+    a = str(datetime.now()).split('.')[0]
     agent = DQNAgent(state_size=CONTROLLER_STATE_SIZE ,action_size= CONTROLLER_ACTION_SIZE, hiddenLayers=[30,30,30], dropout = 0.000, activation = 'relu',loadname = None, saveIn = False, learningRate=0.05, discountFactor= 0.9 )
-    filename = "{}_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}".format(filename, str(datetime.now()).split('.')[0],str(agent.hiddenLayers), str(agent.dropout) , str(agent.learning_rate), str(agent.gamma), agent.activation, str(EPISODES))
+    filename = "{}_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}".format(filename, a ,str(agent.hiddenLayers), str(agent.dropout) , str(agent.learning_rate), str(agent.gamma), agent.activation, str(EPISODES))
     # (filename + str(datetime.now()).split('.')[0] + str(agent.hiddenLayers) + u + str(agent.dropout)+ u +str(object=agent.learning_rate) + u + str(object=agent.gamma) + u + agent.activation + u + str(object=Episodes)+ ".h5"
 
     Visits = np.zeros([META_OPTION_SIZE]) # Store the number of Visits of each intentn tyope
@@ -53,14 +54,14 @@ def main():
             agent.rem_rew(reward)
             i += 1
             running_reward = running_reward + reward
-            print("e=" + str(e))
+            print("Episode=" + str(episode))
             print("i=" + str(i))
 
             # print("State : {}\nAction : {}\nNextState : {}\n".format(state,action,next_state))
             if i % 100 == 0:  # calculating different variables to be outputted after every 100 time steps
                 avr_rew = agent.avg_rew()
-                track.append([str(i) + " " + str(avr_rew) + " " + str(e) + " " + str(agent.epsilon)])
-                with open("results1" + a + "_.txt", 'w') as fi:
+                track.append([str(i) + " " + str(avr_rew) + " " + str(episode) + " " + str(agent.epsilon)])
+                with open("results_" + a + "_.txt", 'w') as fi:
                     for j in range(0, len(track)):
                         line = track[j]
                         fi.write(str(line).strip("[]''") + "\n")

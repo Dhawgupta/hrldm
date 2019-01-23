@@ -348,6 +348,17 @@ class ControllerEnv:
         # now we can multiply by weights
         return diff_confidence # or we can keep and differnt weight factor for the external agent
 
+    def constrain_actions(self, goal = None):
+        """
+        THis will return
+        :param goal:
+        :return:
+        """
+        if goal is None:
+            pass
+        else:
+            pass
+        return list(range(self.primitive_action_space))
 
     def step(self, action):
         print("Env Controller Step")

@@ -157,16 +157,16 @@ class DQNAgent:
         states = np.array([ o[1][0] for o in batch ])
         states_ = np.array([ (no_state if o[1][3] is None else o[1][3]) for o in batch ])
         #print(states)
-        states = np.reshape(states, (1,5))
-        states_ = np.reshape(states_, (1,5))
+        states = np.reshape(states, (1,self.state_size))
+        states_ = np.reshape(states_, (1,self.state_size))
         #print(states.shape)
         p = self.predict(states)
 
         p_ = self.predict(states_, target=False)
         pTarget_ = self.predict(states_, target=True)
 
-        x = np.zeros((len(batch), 5))
-        y = np.zeros((len(batch), 13))
+        x = np.zeros((len(batch), self.state_size))
+        y = np.zeros((len(batch), self.action_size))
         errors = np.zeros(len(batch))
         #print(x.shape)
         #print(y.shape)
@@ -238,9 +238,9 @@ class DQNAgent:
         states = np.array([ o[1][0] for o in batch ])
         states_ = np.array([ (no_state if o[1][3] is None else o[1][3]) for o in batch ])
 
-        p=np.zeros((32, 13))
-        p_=np.zeros((32, 13))
-        pTarget_=np.zeros((32, 13))
+        p=np.zeros((32,self.action_size))
+        p_=np.zeros((32, self.action_size))
+        pTarget_=np.zeros((32, self.action_size))
         for i in range(0,len(states)):
             f = self.predict(states[i])
             p[i]=f
@@ -254,8 +254,8 @@ class DQNAgent:
             pTarget_[i]=f
 
 
-        x = np.zeros((len(batch), 5))
-        y = np.zeros((len(batch), 13))
+        x = np.zeros((len(batch), self.state_size))
+        y = np.zeros((len(batch), self.action_size))
         errors = np.zeros(len(batch))
         for i in range(len(batch)):
             o = batch[i][1]
