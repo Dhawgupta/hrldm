@@ -4,7 +4,8 @@ from hDQN import hDQN
 import impdicts
 from environments import MetaEnv
 import utils
-
+from datetime import datetime
+from time import sleep
 
 NO_SLOTS = 8
 META_STATE_SIZE = 5
@@ -15,8 +16,11 @@ CONTROLLER_ACTION_SIZE = 20
 def main():
     ActorExperience = namedtuple("ActorExperience", ["state", "goal", "action", "reward", "next_state", "done"])
     MetaExperience = namedtuple("MetaExperience", ["state", "goal", "reward", "next_state", "done"])
-    env = MetaEnv() # TODO
-    agent = hDQN()
+    a = str(datetime.now()).split('.')[0]
+    fileMeta = "./saveMeta/{}.h5".format(a)
+    fileController ="./saveController/{}.h5".format(a) # Later we can the add info of layers and nubmer of episodes
+    env = MetaEnv()
+    agent = hDQN(saveInController=False, saveInMeta=False)
     visits = np.zeros((12, 6)) # not required for me
     anneal_factor = (1.0-0.1)/12000
     print("Annealing factor: " + str(anneal_factor))
@@ -65,20 +69,23 @@ def main():
                 #Annealing 
                 if episode_thousand > anneal_start_meta:
                     agent.meta_epsilon -= anneal_factor
-                # avg_success_rate = agent.goal_success[goal-1] / agent.goal_selected[goal-1]
-                
-                # if(avg_success_rate == 0 or avg_success_rate == 1):
-                #     agent.actor_epsilon[goal-1] -= anneal_factor
-                # else:
-                #     agent.actor_epsilon[goal-1] = 1- avg_success_rate
                 agent.actor_epsilon[goal] -= anneal_factor
                 if(agent.actor_epsilon[goal] < 0.1):
                     agent.actor_epsilon[goal] = 0.1
                 print("meta_epsilon: " + str(agent.meta_epsilon))
                 print("actor_epsilon {}".format(agent.actor_epsilon))
-                
+
+
             if (episode % 100 == 99):
                 print("Episodes : {}".format(episode + episode_thousand*1000))
-                # print(str(visits/1000) + "")
+                # Saving the progress
+                print("Saving")
+                agent.saveMeta(fileMeta)
+                agent.saveController(fileController)
+                sleep(0.2)
+                print("Done Saving You can Now Quit")
+                sleep(1)
+
+
 if __name__ == "__main__":
     main()

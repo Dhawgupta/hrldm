@@ -50,7 +50,17 @@ Case 2 : The agent does not know the transport city and will put the options for
  3. `DQN1.py` : using this code for training individual nets and inreality it is the DDQN-pER code  
 #### Comments
 1. Continuing with the yesterday approach, I have introduced another class in the `environments.py` class namely `ControllerEnv` which can basically simulate any subgoal for a training cycle. 
-
-
+2. Meeting, Today where we discussed the possiblity on how to check the training progress of the model.
+    2.1 I will complete the saving part of the Meta and Controller Policy
+    2.2 Maam will figure out a way to check the trainig is happening properly or not
+   
+### Date : 24/1/19
+#### Chnages to 
+ 1. `hDQN.py`
+ 2. `train.py`
+ #### Comments
+ 1. I have implememnted a separaet saving and loading facility for both Meta and Controller Policy similar to our DQN approach and also changed the training code to integrate saving the policy every 100 episodes.
+ 2. Warning : We need to come with a proper naming style , for the time being I am using the Date : TIme .h5 as my format. 
+ 3. Also Currently I am saving the target policy of both and ignoring the normal actor.
 <!-- # To Continue 
 Continie from line 60 in the train code and set an appropritate annealing factor for the meta and controller policy which can take into account the intital bad controller policies and and hence have low annealing factor in the starting but as a the training progress the annesling factor adjusts accordingly -->

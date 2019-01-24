@@ -9,8 +9,10 @@ Starting : This code is based on the paper over here broadly we have 2 neural ne
 import random
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import SGD, RMSprop
+from keras.models import load_model
+
 import utils
 
 NO_SLOTS = 8
@@ -50,7 +52,8 @@ class hDQN:
                 activations=default_activations, loss=default_loss,
                 optimizer=default_optimizer, n_samples=default_n_samples,
                 meta_n_samples=default_meta_n_samples, gamma=default_gamma,
-                meta_epsilon=default_meta_epsilon, epsilon=default_epsilon, actor_epsilon = default_actor_epsilon, tau = default_tau):
+                meta_epsilon=default_meta_epsilon, epsilon=default_epsilon, actor_epsilon = default_actor_epsilon, tau = default_tau,
+                 loadMeta = None, loadController = None, saveInMeta = False, saveInController = False):
         self.meta_layers = meta_layers
         self.meta_inits = meta_inits
         self.meta_nodes = meta_nodes
@@ -77,9 +80,64 @@ class hDQN:
         self.target_tau = tau
         self.memory = []
         self.meta_memory = []
+        self.loadMeta = loadMeta
+        self.loadController = loadController
+        self.saveInLoadedMeta = saveInMeta
+        self.saveInLoadedController = saveInController
+        if self.loadMeta is not None:
+            self.loadMetaPolicy(self.loadMeta)
+
+        if self.loadController is not None:
+            self.loadControllerPolicy(self.loadController)
+
+
+    def loadMetaPolicy(self,name): # TODO differentiate between the loading of the meta polciy and the controller polci
+        print("#### LOADING MODELS ####")
+        print("Loading Meta Model {}".format(name))
+        self.meta_controller = load_model(name)
+        self.target_meta_controller = load_model(name)
+
+    def loadControllerPolicy(self, name):
+        print("#### LOADING MODELS ####")
+        print("Loading Controller Model {}".format(name))
+        self.actor = load_model(name)
+        self.target_actor = load_model(name)
+
+    def saveMeta(self,name):
+        """
+        Currently I am stroring all the neural nets that belong to the target neural net rather than the current because it will reduce the variance
+        :param name:
+        :return:
+        """
+        # saveIn tells us
+        print("## META ## saving in .... {}".format(name))
+        if (self.loadMeta is None) or (self.saveInLoadedMeta is False):
+            print("Saving in without loading : {}".format(name))
+            # self.model.save_weights(name)
+            self.target_meta_controller.save(name)
+        elif self.saveInLoadedMeta is True and self.loadMeta is not None:
+            print("Saving in : {}".format(self.loadMeta))
+            # self.model.save_weights(self.loadname)
+            self.target_meta_controller.save(self.loadMeta)
+        else:
+            print("Error in saving! No Condition Matching")
+
+    def saveController(self, name):
+        print("## CONTROLLER ## saving in .... {}".format(name))
+        if (self.loadController is None) or (self.saveInLoadedController is False):
+            print("Saving in without loading : {}".format(name))
+            # self.model.save_weights(name)
+            self.target_actor.save(name)
+        elif self.saveInLoadedController is True and self.loadController is not None:
+            print("Saving in : {}".format(self.loadController))
+            # self.model.save_weights(self.loadname)
+            self.target_actor.save(self.loadController)
+        else:
+            print("Error in saving! No Condition Matching")
+
 
     def create_meta_controller(self): # This is theta controller                       
-        print("Create Meta Controller")
+        # print("Create Meta Controller")
         meta = Sequential()
         meta.add(self.meta_layers[0](self.meta_nodes[0], init=self.meta_inits[0], input_shape=(self.meta_nodes[0],)))
         meta.add(Activation(self.meta_activations[0]))
@@ -91,7 +149,7 @@ class hDQN:
         return meta
     
     def create_target_meta_controller(self): # This is the theta' controller
-        print("Create Target Meta Controller")
+        # print("Create Target Meta Controller")
         meta = Sequential()
         meta.add(self.meta_layers[0](self.meta_nodes[0], init=self.meta_inits[0], input_shape=(self.meta_nodes[0],)))
         meta.add(Activation(self.meta_activations[0]))
@@ -104,7 +162,7 @@ class hDQN:
 
 
     def create_actor(self): # This is the actor 
-        print("Create Actor")
+        # print("Create Actor")
         actor = Sequential()
         actor.add(self.layers[0](self.nodes[0], init=self.inits[0], input_shape=(self.nodes[0],)))
         actor.add(Activation(self.activations[0]))
@@ -116,7 +174,7 @@ class hDQN:
         return actor
     
     def create_target_actor(self):
-        print("Create Target Actor")
+        # print("Create Target Actor")
         actor = Sequential()
         actor.add(self.layers[0](self.nodes[0], init=self.inits[0], input_shape=(self.nodes[0],)))
         actor.add(Activation(self.activations[0]))
@@ -128,14 +186,14 @@ class hDQN:
         return actor
 
     def select_move(self, state, goal, goal_value):
-        print("Select Move")
+        # print("Select Move")
         vector = np.concatenate([state, goal]) # prepare the vector for controller by concat the 2 states
         if random.random() > self.actor_epsilon[goal_value]:
             return np.argmax(self.actor.predict(vector.reshape([1,CONTROLLER_STATE_SIZE]), verbose=0))
         return np.random.randint(CONTROLLER_ACTION_SIZE) #TODO   / utils.get_random_action_goal(goal) # get an action sampled only from valid actions
 
     def select_goal(self, state):
-        print("Select Goal")
+        # print("Select Goal")
         if self.meta_epsilon < random.random():
             pred = self.meta_controller.predict(state.reshape([1,META_STATE_SIZE]), verbose=0)
             print("pred shape: " + str(pred.shape))
@@ -143,12 +201,12 @@ class hDQN:
         print("Exploring")
         return np.random.randint(META_OPTION_SIZE) 
 
-    def criticize(self, goal, next_state):
-        print("Criticize")
+    def criticize(self, goal, next_state): # This not being used as of now (can be ignored)
+        # print("Criticize")
         return 1.0 if goal == next_state else 0.0
 
     def store(self, experience, meta=False):
-        print("Store")
+        # print("Store")
         if meta:
             self.meta_memory.append(experience)
             if len(self.meta_memory) > 1000000:
@@ -159,7 +217,7 @@ class hDQN:
                 self.memory = self.memory[-1000000:]
 
     def _update(self):
-        print("_Update")
+        # print("_Update")
         exps = [random.choice(self.memory) for _ in range(self.n_samples)] # sample n_samples from the controller memory
         state_vectors = np.squeeze(np.asarray([np.concatenate([exp.state, exp.goal]) for exp in exps])) # for each experince exp contains the state, the goal, action, reward, next state and the same goal, hence we need to make the state vector by concat the s and g vectors
         next_state_vectors = np.squeeze(np.asarray([np.concatenate([exp.next_state, exp.goal]) for exp in exps])) # the same and the squeeze operator converts the 2 d array into a 1 d Array where ever there is single dimension
@@ -194,7 +252,7 @@ class hDQN:
         self.target_actor.set_weights(actor_target_weights)
 
     def _update_meta(self):
-        print("_Update Meta")
+        # print("_Update Meta")
         if 0 < len(self.meta_memory):
             exps = [random.choice(self.meta_memory) for _ in range(self.meta_n_samples)]
             state_vectors = np.squeeze(np.asarray([exp.state for exp in exps]))
@@ -225,8 +283,10 @@ class hDQN:
             self.target_meta_controller.set_weights(meta_target_weights)
 
     def update(self, meta=False):
-        print("Update")
+        # print("Update")
         if meta:
             self._update_meta()
         else:
             self._update()
+
+
