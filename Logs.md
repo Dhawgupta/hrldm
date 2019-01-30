@@ -111,3 +111,6 @@ intent_grousps = create_intent_groups(intents)
 Over here the length of each sub group can be random
 
 2. Also how do we club the intents, we can make default clubs whcih associate similar intents into a single group , but I my current implementation I will be making this clubbing also random
+
+####Step to Continue: 
+Left work at modification of the `MetaEnvMulti` class where I finished the implementaiton of the reset() function. I need to continue from chnaging the step function for meta and cotreoller to take into consideration the extra option added. I have replaced the `current_intent_no` , with the `current_intent_group_no` and need to repalce the same variable at the proper places appropriately Also check the implementation of the tarining code whcih seems to fine.

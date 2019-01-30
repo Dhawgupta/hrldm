@@ -522,7 +522,7 @@ class MetaEnvMulti:
         self.current_slot_state = self.slot_states[-1]
 
 
-    
+
     def controller_step(self, goal, action):
         """
 
