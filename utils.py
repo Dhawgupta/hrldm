@@ -29,6 +29,7 @@ Actione :
 import numpy as np
 import random
 from impdicts import *
+import sys
 
 NO_SLOTS = 8
 META_STATE_SIZE = 5
@@ -65,3 +66,25 @@ def one_hot(point, size):
     return vector
 
 
+def multi_hot(points, size):
+    """
+    Create a multi hot vector of given size with points values filled. Just a cosmetic name difference for the sake of mkaing
+    :param points:
+    :param size:
+    :return:
+    """
+    vector = np.zeros(size)
+    vector[points]  =1.0
+    return vector
+
+def combine_multi_hot(vec1, vec2):
+    """
+    This will combine 2 multi hot vectors and handle clashes as well
+    :param vec1:
+    :param vec2:
+    :return:
+    """
+    if len(vec1) != len(vec2):
+        print("Mismatch in array size")
+        sys.exit()
+    return list(np.array((np.array(vec1) + np.array(vec2) ) > 0, dtype = np.int32))

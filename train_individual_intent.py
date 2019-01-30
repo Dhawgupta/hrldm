@@ -54,7 +54,7 @@ def main():
             agent.rem_rew(reward)
             i += 1
             running_reward = running_reward + reward
-            print("Episode=" + str(episode))
+            print("Episod=" + str(episode))
             print("i=" + str(i))
 
             # print("State : {}\nAction : {}\nNextState : {}\n".format(state,action,next_state))

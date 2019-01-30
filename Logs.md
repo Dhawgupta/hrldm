@@ -63,4 +63,51 @@ Case 2 : The agent does not know the transport city and will put the options for
  2. Warning : We need to come with a proper naming style , for the time being I am using the Date : TIme .h5 as my format. 
  3. Also Currently I am saving the target policy of both and ignoring the normal actor.
 <!-- # To Continue 
-Continie from line 60 in the train code and set an appropritate annealing factor for the meta and controller policy which can take into account the intital bad controller policies and and hence have low annealing factor in the starting but as a the training progress the annesling factor adjusts accordingly -->
+Continie from line 60 in the train co
+
+de and set an appropritate annealing factor for the meta and controller policy which can take into account the intital bad controller policies and and hence have low annealing factor in the starting but as a the training progress the annesling factor adjusts accordingly -->
+
+### Date : 28/1/19
+Started thinking about the multi intent situation
+Poins to be considered
+1. The state space of the meta policy will now include the `intent space variable` as well the `current confidence values`
+2. This will allow the meta policy to learn to pick the proper subpolci given the current confidence of the state, like 
+if the slots respective to a intent are already filled the meta policy wont take the burden of callling that option just to quit immediately after that
+3. WE need to add an additional option now , which says about starting to interact with the user to get the next set of intents, or to end the dialgoue
+
+## Date : 29/1/19
+Currently I will be implementing all the intents in a single controller policy later , we can separate the polcicies
+for each intent into a separate neural net model.
+
+## Date : 30/1/19
+Codes working on 
+- hDQN_multi.py
+- train_multi.py
+- environements.py : class `MetaEnvMulti` 
+
+These codes will implements a single contreoller network for all the intents
+
+Differences from the singel intent model.
+1. Now the state space of meta controller contains the intents (which is not one hot anymore, but marks all intents that have to be servec)
+along with the confidence values for all the slots
+2. There will be an additional option to start a user interatciton to get the new set of intents.
+3. (Debug) THe intent space will maintain all the history of intent, i.e. after picking the user_interaction option, when 
+we get the new intents, we wont erase the older intents, rather than that we will add the new intents. It will be respoonsibiltiy of the meta contoller to decide to pick up the relevant intent.
+
+Points not certain about
+1. Currently I am making an option `user_agnet` whcich will be responsible for interacting with the user to get the next set of intents. THE PROBLEM : Should it be treated as one step option, i.e. a primitve action and directly feeded to the environement in the training process, or as multi step option, i.e the controller level poliy should take care of the asking the user part (this implementation will require extending the user action space by a lot).
+
+Changes in environement needed:
+1. First of we need to write a function that assignes intents, based on batches : IDEA : I will keep the random, intent generation as same and then randomly generate clubs of intents
+
+Example
+
+```buildoutcfg
+intents = [4,3,1,0]
+intent_grousps = create_intent_groups(intents)
+>> intent_groups = [[4,3],[1,0]]
+
+```
+Over here the length of each sub group can be random
+
+2. Also how do we club the intents, we can make default clubs whcih associate similar intents into a single group , but I my current implementation I will be making this clubbing also random
