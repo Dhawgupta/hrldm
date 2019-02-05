@@ -114,3 +114,6 @@ Over here the length of each sub group can be random
 
 ####Step to Continue: 
 Left work at modification of the `MetaEnvMulti` class where I finished the implementaiton of the reset() function. I need to continue from chnaging the step function for meta and cotreoller to take into consideration the extra option added. I have replaced the `current_intent_no` , with the `current_intent_group_no` and need to repalce the same variable at the proper places appropriately Also check the implementation of the tarining code whcih seems to fine.
+
+
+## 4/2/18

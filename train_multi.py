@@ -14,39 +14,40 @@ from time import sleep
 
 
 def main():
-    ActorExperience = namedtuple("ActorExperience", ["state", "goal", "action", "reward", "next_state", "done"]) # now in case over here we
-    MetaExperience = namedtuple("MetaExperience", ["state", "goal", "reward", "next_state", "done"]) # Now the state will be modified to include the intents as well as the confidence values
+    ActorExperience = namedtuple("ActorExperience", ["state", "goal", "action", "reward", "next_state", "done"])
+    MetaExperience = namedtuple("MetaExperience", ["state", "goal", "reward", "next_state", "done"])
     a = str(datetime.now()).split('.')[0] + "_Multi_intent"
     fileMeta = "./saveMeta/{}.h5".format(a)
     fileController ="./saveController/{}.h5".format(a) # Later we can the add info of layers and nubmer of episodes
     env = MetaEnvMulti()
     agent = hDQN(saveInController=False, saveInMeta=False)
-    visits = np.zeros((12, 6)) # not required for me
     anneal_factor = (1.0-0.1)/12000
-    print("Annealing factor: " + str(anneal_factor))
-    anneal_start_meta = 6 # start the annealing after 6000 epsidoes
+    anneal_start_meta = 6
+
     for episode_thousand in range(12):
+
         for episode in range(1000): # Loop for each epsidoe
             total_external_reward = 0
             print("\n\n### EPISODE "  + str(episode_thousand*1000 + episode) + "###")
             [confidence_state, intent_state] = env.reset()
             done = False
-            while not done: # The Loop i whcih meta policy acts
+
+            while not done: # The Loop In wihch meta policy acts
                 temp1 = np.reshape(confidence_state, [-1])
                 temp2 = np.reshape(intent_state, [-1])
                 meta_state = np.concatenate([temp1,temp2])
                 goal = agent.select_goal(meta_state) # now the goal has 6 possible actions
                 print("Meta State: {} , Options Selected : {}".format(meta_state, goal))
                 goal_reached = False
-                goal_start_state = confidence_state # the starting state in the beginning of a goal
-                # Loop in which a sub policy acts for a goal
+
                 env.meta_step_start(goal)
+
                 print("##Entering Controller for {} ## ".format(impdicts_multi.indx2intent[goal]))
                 goal_iter = 0
                 if goal == 5: # the asking the user_agent option
                     pass
-                    # next_intent, external_reward, done = env.meta_step_end(goal)
                 else: # the normal process
+
                     while not goal_reached:
                         action = agent.select_move(confidence_state, utils.one_hot(goal, META_OPTION_SIZE), goal)
                         if action == 19:
@@ -62,17 +63,20 @@ def main():
                         confidence_state = next_confidence_state
                         print("Goal Iteration : {}".format(goal_iter))
                         goal_iter += 1
-                # calculate the Meta Reward
-                start_confidence_state, end_confidence_state, next_intent , external_reward, done = env.meta_step_end(goal) # TODO this function should make the distinciton and only give the new intent state (yet to be implemented) for the option `user_agent`
-                # external_reward = env.calculate_external_reward(goal_start_state, goal_end_state, goal)
-                # create new states
+
+
+                start_confidence_state, end_confidence_state, next_intent , external_reward, done = env.meta_step_end(goal)
+
                 start_state_temp = np.concatenate([np.reshape(start_confidence_state,[-1]), np.reshape(intent_state,[-1])])
                 end_state_temp = np.concatenate([np.reshape(end_confidence_state,[-1]), np.reshape(next_intent,[-1])])
 
                 exp = MetaExperience(start_state_temp,  goal, external_reward, end_state_temp, done)
+
                 intent_state = next_intent
+
                 agent.store(exp, meta=True)
                 total_external_reward += external_reward
+
                 #Annealing
                 if episode_thousand > anneal_start_meta:
                     agent.meta_epsilon -= anneal_factor

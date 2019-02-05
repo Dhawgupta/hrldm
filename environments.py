@@ -280,7 +280,7 @@ class MetaEnv:
         slots_to_be_checked = impdicts.intent2slots[goal] # these are the slots
         return all(self.current_slot_state[slots_to_be_checked] > self.threshold)
 
-# prepare and environment to train a separate conteroller
+# This enviornment is build to train controller level policie
 class ControllerEnv:
     def __init__(self, goal = 0, w1 = 1, w2 = 8, w3 = 0, slot_space_size = 8, options_space = 5, primitive_action_space = 20, goal_space_size = 5): # The default goal
         self.goal = goal
@@ -447,6 +447,7 @@ class MetaEnvMulti:
         self.current_intent_state= []
         self.current_slot_state = np.array([])
         self.current_intent_group_no = 0 # Intent group being served
+        self.total_intent_group_nos = 0 # This will contain the total intent groups, or the amount of times the user_agnet action should ideally be invoked
         self.no_intents = 0 # the number of intents to be served i.e. len(self.current_obj_intent)
         self.goal_iter = [] # The number of iterations done for each subgoal completion
         self.curret_obj_intent_groups = [] # A 2D list, containting list of the itnetns to be served at a given group time
@@ -482,7 +483,7 @@ class MetaEnvMulti:
             self.random_state_init()
         else:
             self.state_init()
-        self.curret_obj_intent_groups = self.create_intent_group() # TODO implement this funciton
+        self.curret_obj_intent_groups = self.create_intent_group()
         # now we will set the intital intent state of the system and also the buffer to store the intent states
         self.current_intent_group_no = 0 # Keeps track of the intent number being served
         self.intent_states = np.array([ utils.multi_hot(self.curret_obj_intent_groups[self.current_intent_group_no], self.intent_space_size)]) # setting the starting intent
@@ -521,8 +522,6 @@ class MetaEnvMulti:
         self.slot_states = np.zeros((1, self.slot_space_size))  # initliase with zero for all values
         self.current_slot_state = self.slot_states[-1]
 
-
-
     def controller_step(self, goal, action):
         """
 
@@ -531,6 +530,11 @@ class MetaEnvMulti:
         :return: next_confidence_state, reward, goal_completed
         """
         print("Env Controller Step")
+        # Explicitytly writing the goal condition
+        if goal == 5:
+            # we don't need to do any thing for this and probably this will never Occur
+            print("IMPLEMENTATION ERROR : This condition should have never been approached")
+            sys.exit()
         # done = False
         goal_reached = False
         new_state = np.copy(self.current_slot_state)  # copy the state of the current slot state
@@ -601,16 +605,39 @@ class MetaEnvMulti:
         self.latest_start_confidence_start = np.copy(self.current_slot_state)
         return self.latest_start_confidence_start
 
-    def meta_step_end(self, option) -> Tuple[int, float, bool]  :
+    def meta_step_end(self, option):
+        done = False
+        reward = 0
+        if option == 5: # we need to switch to the next set of intents
+            # We Will check if it has filled all the relevant slots for the intents and reward it appropritaley for each slot filled
+
+
+            pass # special case for agent action
+        else:
+            reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
+            # the current_intent_state should not change
+            return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
+
+    def user_agent_reward(self):
+
+        """
+        We will requrie teh use of
+        self.current_slot_state
+        self.current_intent_state
+
+        :return:
+        """
+    def meta_step_end_legacy1(self, option) -> Tuple[int, float, bool]  :
         """
 
         :param option: The option chosen
         :return: return the  next intent, reward, done (still skeptical about returning the confidence state)
         Points :
-        Currently the rewards a really simple, they dont penalize for filling other slots that might not be relevant. We can penalize these states in the future by subtracting the extra sltos filled
+        This function will funciton normally for all options except user_agent (5) option, for that we need to check if the all the group intents are served or not
         """
         done = False
         reward = 0
+        # return the next sets of intents
         current_intent = self.current_obj_intent[self.current_intent_no]
         reward = self.w2*self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, current_intent)
         self.current_intent_no += 1  # if all the intents in the current object are over
@@ -637,6 +664,7 @@ class MetaEnvMulti:
         diff_confidence: float = np.sum(goal_state[relevants_slots] - start_state[relevants_slots])
         # now we can multiply by weights
         return diff_confidence # or we can keep and differnt weight factor for the external agent
+
 
     def check_confidence_state(self, goal):
         """
