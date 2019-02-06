@@ -348,11 +348,11 @@ class ControllerEnv:
         # now we can multiply by weights
         return diff_confidence # or we can keep and differnt weight factor for the external agent
 
-    def constrain_actions(self, goal = None):
+    def constrain_actions(self, goal : int = None) -> List[int]:
         """
-        THis will return
-        :param goal:
-        :return:
+        THis will return the set of actions that might be valid for a given goal but for the momet to increase complexoty we are not constraining the possible actions for each goal
+        :param goal: The int goal value that is required
+        :return: list of int containint possible actions for the goal
         """
         if goal is None:
             pass

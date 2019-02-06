@@ -147,6 +147,8 @@ class DQNAgent:
             if epsilon > self.epsilon_min:
                 epsilon -= self.epsilon_decay
             return epsilon
+
+
     def updateTargetModel(self):
         self.model_.set_weights(self.model.get_weights())
 

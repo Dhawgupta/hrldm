@@ -1,11 +1,7 @@
 """
-Update  : 30/1/19
-Currently the code is based on a single model for all teh intents in the controller phase where we are using a goal vector to differentiate between different goals to pursue
-This code has been adopted from the github repo EthanMacdonald/h-DQN
-I am commenting this code so that people can understand it more easily
-Starting : This code is based on the paper over here broadly we have 2 neural networks
-1. The Meta Polciy Neural Network for Q function
-2. The controller level Neural Network which encompasses all the option policies in a single Neural Network, switched by a one hot vector for each option polcy
+THis code is meant for serving multiple intents in a single user interaction in query for intents
+This is Kinda the version 2
+Although no subsanial changes are present in the code
 """
 
 import random
