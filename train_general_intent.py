@@ -45,7 +45,7 @@ def run(option = option, episodes = 100000, no_slots = NO_SLOTS,meta_state_size 
     track = []
     i = 0
     for episode in range(EPISODES):
-        print("\n\n### EPISODE " + str(episode) + "###")
+        # print("\n\n### EPISODE " + str(episode) + "###")
         goal = option # randomly sample a option to pursue
         visits +=1
         running_reward = 0
@@ -66,10 +66,12 @@ def run(option = option, episodes = 100000, no_slots = NO_SLOTS,meta_state_size 
             agent.rem_rew(reward)
             i += 1
             running_reward = running_reward + reward
-            print("Episode=" + str(episode))
-            print("i=" + str(i))
+            # print("Episode=" + str(episode))
+            # print("i=" + str(i))
 
-            if i % 100 == 0:  # calculating different variables to be outputted after every 100 time steps
+            if i % 1000 == 0:  # calculating different variables to be outputted after every 100 time steps
+                print("Description of Run :\nOption : {}\nEpisodes : {}".format(option, episodes))
+                print("i=" + str(i))
                 avr_rew = agent.avg_rew()
                 track.append([str(i) + " " + str(avr_rew) + " " + str(episode) + " " + str(epsilon)])
                 with open("results_" + a + "_Policy_{}_.txt".format(goal), 'w') as fi:

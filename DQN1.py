@@ -36,7 +36,7 @@ print("Setting the GPU fraction usage to 12 % for running all models    concurre
 class Memory:   # stored as ( s, a, r, s_ ) in SumTree
     e = 0.01
     a = 0.6
-    print("in memory")
+    # # print("in memory")
     def __init__(self, capacity):
         self.tree = SumTree(capacity)
 
@@ -71,7 +71,7 @@ class DQNAgent:
                  saveIn=False, learningRate=0.01, discountFactor=0.9,
                  epsilon=None):  # the file to load is provided if requirede
         # saveIn is providded if to store the model in from which we load it
-        print("in init")
+        # print("in init")
         self.state_size = state_size
         self.action_size = action_size
         #self.memory = deque(maxlen=100000)
@@ -113,7 +113,7 @@ class DQNAgent:
 
     def _build_model(self, hiddenLayers, dropout, activation):
         # Neural Net for Deep-Q learning Model
-        print("in build_model")
+        # print("in build_model")
         bias = True
         model = Sequential()
         if len(hiddenLayers) == 0:
@@ -147,7 +147,7 @@ class DQNAgent:
         :param epsilon: (optional) Required to manage mulitple epislon for different intents, introduced for HRL thing
         :return: None if using the internal epislon, else return epsilon
         """
-        print(sample)
+        # print(sample)
         x, y, errors = self._getTargets([(0, sample)])
         self.memory.add(errors[0], sample)
 
@@ -170,7 +170,7 @@ class DQNAgent:
         self.model_.set_weights(self.model.get_weights())
 
     def _getTargets(self, batch):
-        print("in targets")
+        # print("in targets")
         no_state = np.zeros(self.state_size)
 
         states = np.array([ o[1][0] for o in batch ])
@@ -251,7 +251,7 @@ class DQNAgent:
         return max_key  # returns action
 
     def getTargets(self, batch):
-        print("in new targets")
+        # print("in new targets")
         no_state = np.zeros(self.state_size)
 
         states = np.array([ o[1][0] for o in batch ])
@@ -308,7 +308,7 @@ class DQNAgent:
 
     # def load(self, name):
     def load(self, name):
-        print("in load")
+        # print("in load")
         print("Loading the model {} ".format(name))
         self.model = load_model(name)
         # time.sleep(3)

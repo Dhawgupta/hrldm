@@ -361,12 +361,12 @@ class ControllerEnv:
         return list(range(self.primitive_action_space))
 
     def step(self, action):
-        print("Env Controller Step")
+        #print("Env Controller Step")
         # done = False
         goal_reached = False
         new_state = np.copy(self.current_slot_state)  # copy the state of the current slot state
         current_intent = self.goal
-        print("Step : Current Intent : {}".format(current_intent))
+        #print("Step : Current Intent : {}".format(current_intent))
         reward = 0
         if action == 19:
             """
@@ -529,7 +529,7 @@ class MetaEnvMulti:
         :param action: : The action that the agent is taking pertaining to that goal
         :return: next_confidence_state, reward, goal_completed
         """
-        print("Env Controller Step")
+        # print("Env Controller Step")
         # Explicitytly writing the goal condition
         if goal == 5:
             # we don't need to do any thing for this and probably this will never Occur
@@ -539,7 +539,7 @@ class MetaEnvMulti:
         goal_reached = False
         new_state = np.copy(self.current_slot_state)  # copy the state of the current slot state
         current_intent = goal
-        print("Step : Current Intent : {}".format(current_intent))
+        # print("Step : Current Intent : {}".format(current_intent))
         reward = 0
         if action == 19:
             """
