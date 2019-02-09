@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <pthread.h>
 #include <stdlib.h>
+#include <chrono>
+#include <thread>
 
 
 using namespace std;
@@ -26,7 +28,9 @@ void *runIntentTrain(void *params){
 	}
 
 	command = command + "python train_general_intent.py " + to_string(param->intent) + " " + to_string(param->episodes);
-	
+	cout<<"Command : "<<command<<endl;	
+
+	this_thread::sleep_for(chrono::seconds(5));
 	//tid = (long)threadid;
 	// now we need to convert the command to const char * to pass to systme
 	const char *cstr = command.c_str();
@@ -52,6 +56,7 @@ int main(int argc, char ** argv){
 			cout<<"Error Not able to start thrrread"<<rc<<endl;
 			exit(-1);
 		}
+		this_thread::sleep_for(chrono::seconds(1));
 	}
 	pthread_exit(NULL);
 
