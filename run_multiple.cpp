@@ -44,7 +44,7 @@ int main(int argc, char ** argv){
 		Parameter params;
 		params.episodes= 100000; // run for 1lakh epsiode
 		params.intent = i;
-		params.run_on_gpu = true;
+		params.run_on_gpu = false;
 		params.gpu_core = stoi(argv[1]);
 		rc = pthread_create(&threads[i], NULL, runIntentTrain, (void *)&params);
 
