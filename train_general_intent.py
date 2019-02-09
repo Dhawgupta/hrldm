@@ -25,6 +25,8 @@ option = 1
 import argparse
 
 
+
+
 def run(option = option, episodes = 100000, no_slots = NO_SLOTS,meta_state_size = META_STATE_SIZE,meta_option_size = META_OPTION_SIZE,controller_state_size = CONTROLLER_STATE_SIZE,controller_action_size = CONTROLLER_ACTION_SIZE):
     print("Description of Run :\nOption : {}\nEpisodes : {}".format(option, episodes))
     sleep(1)
@@ -104,6 +106,7 @@ def main():
 
     :return:
     """
+    DQNAgent.setup_gpu(6)
 
     parser = argparse.ArgumentParser(description='Run the trianing for a single intent')
     parser.add_argument('option', type=int, default=0,
