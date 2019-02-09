@@ -116,5 +116,13 @@ Over here the length of each sub group can be random
 Left work at modification of the `MetaEnvMulti` class where I finished the implementaiton of the reset() function. I need to continue from chnaging the step function for meta and cotreoller to take into consideration the extra option added. I have replaced the `current_intent_no` , with the `current_intent_group_no` and need to repalce the same variable at the proper places appropriately Also check the implementation of the tarining code whcih seems to fine.
 
 
-## 6/2/18
+## 6/2/19
 Started work on training individual models for each policy so that we can have train separaete policy for each intent. The file working on is `train_individual_intent_multi_model.py`
+
+## 8/2/19
+After the GPU maintainned I have put the code on run meanwhile I have been surveying some more of the work on end to end diaogue training and also studying a little bit of tensorflow to start understaningthe data effecient HRL codes'
+
+## 9/2/18
+Today I will start working on training all the models in a separate code , so that I dont have to rely on single code for the same.
+I will be doing this under 
+`train_individual_intent_multi_separate.py`
