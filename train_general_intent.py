@@ -13,7 +13,8 @@ from environments import ControllerEnv
 import utils
 from time import sleep
 from datetime import datetime
-
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
 
 NO_SLOTS = 8
 META_STATE_SIZE = 5
@@ -114,4 +115,8 @@ def main():
     return 0
 
 if __name__ == "__main__":
+    config = tf.ConfigProto()
+    config.gpu_options.per_process_gpu_memory_fraction = 0.2
+    config.gpu_options.visible_device_list = "0"
+    set_session(tf.Session(config=config))
     main()
