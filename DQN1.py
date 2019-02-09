@@ -12,21 +12,22 @@ from keras.optimizers import Adam
 from keras import optimizers
 from keras.models import load_model
 import time
+import os
 
 from SumTree1 import SumTree
 import tensorflow as tf
 from keras import backend as k
-
+from keras.backend.tensorflow_backend import set_session
 ###################################
-# TensorFlow wizardry
-config = tf.ConfigProto()
-
-# Don't pre-allocate memory; allocate as-needed
-config.gpu_options.allow_growth = True
-
-# Only allow a total of half the GPU memory to be allocated
-config.gpu_options.per_process_gpu_memory_fraction = 0.12
-
+# # TensorFlow wizardry
+# config = tf.ConfigProto()
+#
+# # Don't pre-allocate memory; allocate as-needed
+# config.gpu_options.allow_growth = True
+#
+# # Only allow a total of half the GPU memory to be allocated
+# config.gpu_options.per_process_gpu_memory_fraction = 0.12
+#
 
 print("Setting the GPU fraction usage to 12 % for running all models    concurrently")
 
@@ -327,3 +328,13 @@ class DQNAgent:
             self.model.save(self.loadname)
         else:
             print("Error in saving no Conition mathcing")
+
+    def setup_gpu(gpu_id: str):
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # don't show any messages
+        os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+        os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
+        config.log_device_placement = False
+        config.allow_soft_placement = True
+        set_session(tf.Session(config=config))
