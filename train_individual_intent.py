@@ -96,4 +96,5 @@ def run_experiment():
     pass
 
 if __name__ == "__main__":
+    DQNAgent.setup_gpu(6)
     main()
