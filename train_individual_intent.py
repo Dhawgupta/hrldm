@@ -21,18 +21,18 @@ def main():
     # MetaExperience = namedtuple("MetaExperience", ["state", "goal", "reward", "next_state", "done"])
     epsilons = np.ones([META_OPTION_SIZE])
     env = ControllerEnv()  # TODO
-    EPISODES = 12000
+    EPISODES = 300000
     a = str(datetime.now()).split('.')[0]
-    agent = DQNAgent(state_size=CONTROLLER_STATE_SIZE ,action_size= CONTROLLER_ACTION_SIZE, hiddenLayers=[30,30,30], dropout = 0.000, activation = 'relu',loadname = None, saveIn = False, learningRate=0.05, discountFactor= 0.9 )
-    filename = "{}_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}".format(filename, a ,str(agent.hiddenLayers), str(agent.dropout) , str(agent.learning_rate), str(agent.gamma), agent.activation, str(EPISODES))
+    agent = DQNAgent(state_size=CONTROLLER_STATE_SIZE ,action_size= CONTROLLER_ACTION_SIZE, hiddenLayers=[75], dropout = 0.000, activation = 'relu',loadname = None, saveIn = False, learningRate=0.05, discountFactor= 0.7 )
+    filename = "{}_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_all_intents_in_one.h5".format(filename, a ,str(agent.hiddenLayers), str(agent.dropout) , str(agent.learning_rate), str(agent.gamma), agent.activation, str(EPISODES))
     # (filename + str(datetime.now()).split('.')[0] + str(agent.hiddenLayers) + u + str(agent.dropout)+ u +str(object=agent.learning_rate) + u + str(object=agent.gamma) + u + agent.activation + u + str(object=Episodes)+ ".h5"
 
-    Visits = np.zeros([META_OPTION_SIZE]) # Store the number of Visits of each intentn tyope
-    batch_size = 32
+    visits = np.zeros([META_OPTION_SIZE]) # Store the number of Visits of each intentn tyope
+    batch_size = 64
     track = []
     i = 0
     for episode in range(EPISODES):
-        print("\n\n### EPISODE " + str(episode) + "###")
+        # print("\n\n### EPISODE " + str(episode) + "###")
         # Get a random option
         goal = np.random.randint(META_OPTION_SIZE) # randomly sample a option to pursue
         running_reward = 0
@@ -54,8 +54,8 @@ def main():
             agent.rem_rew(reward)
             i += 1
             running_reward = running_reward + reward
-            print("Episod=" + str(episode))
-            print("i=" + str(i))
+            # print("Episod=" + str(episode))
+            # print("i=" + str(i))
 
             # print("State : {}\nAction : {}\nNextState : {}\n".format(state,action,next_state))
             if i % 100 == 0:  # calculating different variables to be outputted after every 100 time steps
@@ -67,7 +67,7 @@ def main():
                         fi.write(str(line).strip("[]''") + "\n")
             # print(track)
             if done:
-                print("episode: {}/{}, score: {}, e: {:.2}".format(episode, EPISODES, running_reward, agent.epsilon))
+                print("episode: {}/{}, score: {}, e's: {}".format(episode, EPISODES, running_reward, epsilons))
                 print("The state is : ", next_state)
                 break
 

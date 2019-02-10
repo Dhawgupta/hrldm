@@ -2,6 +2,7 @@
 This code is supposed to train indiviual models for each intent (i.e. opition)
 This code is built to train a separate model for each intent. But train all intents togehter in a single manner ,i.e. by trandomly sampling from
 the intent space
+Removing the printing output, to fasten the execution
 '''
 
 import numpy as np
