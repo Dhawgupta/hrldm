@@ -125,4 +125,12 @@ After the GPU maintainned I have put the code on run meanwhile I have been surve
 ## 9/2/18
 Today I will start working on training all the models in a separate code , so that I dont have to rely on single code for the same.
 I will be doing this under 
-`train_individual_intent_multi_separate.py`
+`train_individual_intent_multi_separate.py
+
+## 11/2/19
+Checked the training of single net for multiple intetnt under the 10/2 and seems to be converging as of now :D
+Also I have organized the code better into folder. I need to add the NLU, NLG, and testing codes as of now to the main code.
+Plans To be DOne : 
+1. Put the Meta polciy on training on top of both the multiple net model and teh singel net model to see how it trains for serving multiple intents at a time. 
+2. I also need to refactor the code now because of moving them into folder which we need to take care of now
+
