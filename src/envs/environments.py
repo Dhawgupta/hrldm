@@ -9,7 +9,7 @@ import random
 from ..util import utils
 from ..util import impdicts
 from typing import List, Tuple, Dict
-import sys
+
 import sys, os
 
 sys.path.insert(0, os.path.abspath('..'))
@@ -455,7 +455,7 @@ class MetaEnvMulti:
         self.total_intent_group_nos = 0 # This will contain the total intent groups, or the amount of times the user_agnet action should ideally be invoked
         self.no_intents = 0 # the number of intents to be served i.e. len(self.current_obj_intent)
         self.goal_iter = [] # The number of iterations done for each subgoal completion
-        self.curret_obj_intent_groups = [] # A 2D list, containting list of the itnetns to be served at a given group time
+        self.current_obj_intent_groups = [] # A 2D list, containting list of the itnetns to be served at a given group time
         self.reset()
         self.latest_start_confidence_start = [] # Store the last confidnce state before the start of the option play for the subpolicy
         # self.slot_states # this is the list of all the slot states encountered in runs
@@ -488,10 +488,10 @@ class MetaEnvMulti:
             self.random_state_init()
         else:
             self.state_init()
-        self.curret_obj_intent_groups = self.create_intent_group()
+        self.current_obj_intent_groups = self.create_intent_group()
         # now we will set the intital intent state of the system and also the buffer to store the intent states
         self.current_intent_group_no = 0 # Keeps track of the intent number being served
-        self.intent_states = np.array([ utils.multi_hot(self.curret_obj_intent_groups[self.current_intent_group_no], self.intent_space_size)]) # setting the starting intent
+        self.intent_states = np.array([ utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no], self.intent_space_size)]) # setting the starting intent
 
         # self.intent_states = np.array([ util.one_hot( self.current_obj_intent[self.current_intent_no], self.intent_space_size)]) # setting the starting intent
         self.current_intent_state = self.intent_states[-1]
@@ -607,6 +607,7 @@ class MetaEnvMulti:
         :return: return the current confidence state of the dialogue
         """
         # store the current_confidence state
+
         self.latest_start_confidence_start = np.copy(self.current_slot_state)
         return self.latest_start_confidence_start
 
@@ -616,8 +617,19 @@ class MetaEnvMulti:
         if option == 5: # we need to switch to the next set of intents
             # We Will check if it has filled all the relevant slots for the intents and reward it appropritaley for each slot filled
 
+            # Implementing the reward for the meta policy
 
-            pass # special case for agent action
+            # And also modify the next intent state
+            intent_groups = len(self.current_obj_intent_groups) # this gives the number of intent grousp that we need to cycel thoufh
+            reward = self.user_agent_reward() # THis function will return the reward for the user agnet action,
+            self.current_intent_group_no +=1
+            # check if we are done with the thing or not. I.e. if we are equal with the number of groups
+            if self.current_intent_group_no >= intent_groups:
+                done = True
+                # dont change the intente state
+            self.intent_state = utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no])
+            return self.latest_start_confidence_start, self.current_slot_state, self.intent_state, reward, done
+            # TODO we also need to penalize the agent for extra steps that it takes to acheive a certain task because, it should pick the most effecient process
         else:
             reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
             # the current_intent_state should not change
@@ -629,10 +641,24 @@ class MetaEnvMulti:
         We will requrie teh use of
         self.current_slot_state
         self.current_intent_state
+        We will return the matching slots for the intetnts specifficed bt current intent state and award the policy for filling all those slots
 
-        :return:
+
+        :return: A scalar reward value
         """
-
+        relevant_slots = []
+        for each_goal in self.current_obj_intent_groups[self.current_intent_group_no]:
+            relevant_slots = np.concatenate([relevants_slots, impdicts.intent2slots[each_goal]])
+        relevant_slots = list(set(np.array(relevant_slots, dtype=np.int32)))
+        # these are the relevant slots checl the value for these
+        correct =  all(self.current_slot_state[relevant_slots] > self.threshold)
+        if correct:
+            # give reward for all the slots
+            # return self.w1*
+            return self.w1*np.sum(self.current_slot_state[relevant_slots])
+        else:
+            return -self.w1*(float(len(self.current_slot_state[relevant_slots])) - np.sum(self.current_slot_state[relevant_slots])) # Subtract the remaining confidence values of the slots that is requried to fill the same.
+                             #FIXME Check the validityi of this reward fucntio for agnet
 
     def meta_step_end_legacy1(self, option) -> Tuple[int, float, bool]  :
         """

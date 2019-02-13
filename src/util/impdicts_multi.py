@@ -1,4 +1,6 @@
 # TOdo to modifty the file to work for 6 option of asking the user aciton
+
+# FIXME (NOTE) Currently I will not be using this fiel , please update if the same si changed
 from typing import Tuple, List, Dict
 
 slot2tag = {'to_loc': '$ACITY$', 'froms_loc': '$DCITY$',

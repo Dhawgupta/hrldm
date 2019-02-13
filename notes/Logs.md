@@ -134,3 +134,14 @@ Plans To be DOne :
 1. Put the Meta polciy on training on top of both the multiple net model and teh singel net model to see how it trains for serving multiple intents at a time. 
 2. I also need to refactor the code now because of moving them into folder which we need to take care of now
 
+
+## 13/2/19
+Today I have started with the propoer implmeemntaiton of the meta policy training, 
+1. IO have to incoporate the execution of controller polciy, when my meta policy selects and action
+2. I was confused on the updaate of the intent state , i.e. should we reating the old intent values or, rewplace them with the new values 
+3. I am updating the env to have  a reard fucntion for the user gent ask qurstion currently my quwstion is modelled around :
+ 1. According the intent that are requried if all the slots are filled or not, i..e even if one slots is not fiolled, we gice it the negative rewatf for the remaining confidence value
+ 2. I am planning on adding the number of ireration that were needed to complete the all the intents, thos will motivetee the agfent only to pickup the relvant options,
+ 
+4. I have done completed the implemenetaiton, but I have yet to check for the bugs and also add the provision of arguemnt parsing.
+

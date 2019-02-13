@@ -48,7 +48,7 @@ class Memory:   # stored as ( s, a, r, s_ ) in SumTree
 
     def add(self, error, sample):
         p = self._getPriority(error)
-        self.tree.add(p, sample) 
+        self.tree.add(p, sample)
 
     def sample(self, n):
         batch = []
@@ -196,7 +196,7 @@ class DQNAgent:
         for i in range(len(batch)):
             o = batch[i][1]
             s = o[0]; a = o[1]; r = o[2]; s_ = o[3]
-            
+
             t = p[i]
             oldVal = t[a]
             if s_ is None:
@@ -282,7 +282,7 @@ class DQNAgent:
         for i in range(len(batch)):
             o = batch[i][1]
             s = o[0]; a = o[1]; r = o[2]; s_ = o[3]
-            
+
             t = p[i]
             oldVal = t[a]
             if s_ is None:
@@ -296,7 +296,7 @@ class DQNAgent:
 
         return (x, y, errors)
 
-    def replay(self): 
+    def replay(self):
         BATCH_SIZE = 32
         batch = self.memory.sample(BATCH_SIZE)
         #print(batch)
@@ -310,10 +310,17 @@ class DQNAgent:
         self.model.fit(x, y, batch_size=32, epochs=1, verbose=0)
 
     # def load(self, name):
-    def load(self, name):
+    def load(self, name = None):
         # print("in load")
-        print("Loading the model {} ".format(name))
-        self.model = load_model(name)
+        if name is not None:
+            print("Loading the model {} ".format(name))
+            self.model = load_model(name)
+        elif self.loadname is not None:
+
+            print("Loading the model {} ".format(name))
+            self.model = load_model(self.loadname)
+        else:
+            raise Exception('Model name not provided erither in the the form of argument or object attribute')
         # time.sleep(3)
         # self.model.load_weights(name)
 
