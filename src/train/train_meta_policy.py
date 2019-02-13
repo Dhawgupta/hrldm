@@ -1,23 +1,109 @@
 '''
-This code is supposed to train indiviual models for each intent (i.e. opition)
-This code is built to train a separate model for each intent. But train all intents togehter in a single manner ,i.e. by trandomly sampling from
-the intent space
-This script will be called from a parent script, and has the addition fo Child in the name
+This code focuses on training the meta policy for the DM that we have proposed.
+This implementation will focus on training the meta [polciy for a single controller network for multiple intent policies.
 '''
 
+
 import numpy as np
-from collections import namedtuple
 from ..DQN.DQN1 import DQNAgent
+from collections import namedtuple
 from ..util import impdicts
-from ..util import  utils
-from ..envs.environments import ControllerEnv
+from ..envs.environments import MetaEnvMulti
+from ..util import utils
 from time import sleep
 from datetime import datetime
-import tensorflow as tf
-from keras.backend.tensorflow_backend import set_session
+
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
+
 NO_SLOTS = 8
+NO_INTENTS = 5
+META_STATE_SIZE = NO_SLOTS + NO_INTENTS
+META_OPTION_SIZE = 6
+CONTROLLER_STATE_SIZE = NO_SLOTS + NO_INTENTS
+CONTROLLER_ACTION_SIZE = 20
+
+
+def main():
+    filename = "./save/Meta_"
+    epsilon = 1
+    env = MetaEnvMulti()  # TODO
+    EPISODES = 300000 # To set this accordingly
+    a = str(datetime.now()).split('.')[0]
+    MetaAgent = DQNAgent(state_size=META_STATE_SIZE ,action_size= META_OPTION_SIZE, hiddenLayers=[75], dropout = 0.000, activation = 'relu',loadname = None, saveIn = False, learningRate=0.05, discountFactor= 0.7 )
+    filename = "_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_all_intents_in_one.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES))
+
+
+    visits = np.zeros([META_OPTION_SIZE]) # Store the number of Visits of each intentn tyope
+    batch_size = 64
+    track = []
+    i = 0
+    for episode in range(EPISODES):
+        # Now sample the next set of options from env
+        goal = np.random.randint(META_OPTION_SIZE) # randomly sample a option to pursue
+        running_reward = 0
+        [confidence_state, intent_state] = env.reset() # now the intent state can have multiple intents in there
+        # visits[episode_thousand][state] += 1
+        done = False
+        while not done:  # The Loop i whcih meta policy act
+
+            all_options = env.constrain_options()
+            state = np.concatenate([confidence_state, intent_state])
+
+            state = state.reshape([1, META_STATE_SIZE])  # Converted to appropritate size
+            meta_start_state = state.copy()
+
+            option = MetaAgent.act(state, all_options, epsilon=MetaAgent[goal])
+            next_confidence_state = env.meta_step_start(option)  # get the reward at the sub policy level
+            ##############################################
+            # TODO Run the controller policy over here
+            # while terminate_option:
+            #   run ..
+            #   run ..
+            #
+            #
+            ###############################################
+            confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end(option)
+            meta_end_state = np.concatenate([next_confidence_state, intent_state])
+
+            meta_end_state = meta_end_state.reshape([1, META_STATE_SIZE])
+            epsilon = MetaAgent.observe((meta_start_state, option,meta_reward, meta_end_state ,done), epsilon= epsilon )
+            if MetaAgent.memory.tree.total() > batch_size:
+                MetaAgent.replay()
+                MetaAgent.rem_rew(meta_reward)
+            i += 1
+            running_reward = running_reward + meta_reward
+            # print("Episod=" + str(episode))
+            # print("i=" + str(i))
+
+            # print("State : {}\nAction : {}\nNextState : {}\n".format(state,action,next_state))
+            if i % 100 == 0:  # calculating different variables to be outputted after every 100 time steps
+                avr_rew = MetaAgent.avg_rew()
+                track.append([str(i) + " " + str(avr_rew) + " " + str(episode) + " " + str(epsilon)])
+                with open("results_" + a + "_.txt", 'w') as fi:
+                    for j in range(0, len(track)):
+                        line = track[j]
+                        fi.write(str(line).strip("[]''") + "\n")
+            # print(track)
+            if done:
+                print("episode: {}/{}, score: {}, e's: {}".format(episode, EPISODES, running_reward, epsilon))
+                print("The state is : ", meta_end_state)
+                break
+
+            confidence_state = next_confidence_state
+
+        if episode % 100 == 0:
+            print("Episodes : {}".format(episode))
+            # Saving the progress
+            print("Saving")
+            # convert this to save model for each policy
+            agent.save(filename)
+            # agent.saveController(fileController)
+            sleep(0.2)
+            print("Done Saving You can Now Quit")
+            sleep(1)
+
+
 META_STATE_SIZE = 5
 META_OPTION_SIZE = 5
 CONTROLLER_STATE_SIZE = NO_SLOTS
@@ -125,4 +211,17 @@ if __name__ == "__main__":
     config.gpu_options.per_process_gpu_memory_fraction = 0.2
     config.gpu_options.visible_device_list = "0"
     set_session(tf.Session(config=config))
+    main()
+
+
+def run_experiment():
+    """
+    This will be the same function as above an will be used to call multiple iterations of programs with varying parameters
+
+    :return:
+    """
+    pass
+
+if __name__ == "__main__":
+    DQNAgent.setup_gpu('6')
     main()

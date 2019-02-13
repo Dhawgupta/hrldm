@@ -195,7 +195,7 @@ class hDQN3:
         if random.random() > self.actor_epsilon[goal_value]:
             return np.argmax(self.actor.predict(vector.reshape([1, CONTROLLER_STATE_SIZE]), verbose=0))
         return np.random.randint(
-            CONTROLLER_ACTION_SIZE)  # TODO   / utils.get_random_action_goal(goal) # get an action sampled only from valid actions
+            CONTROLLER_ACTION_SIZE)  # TODO   / util.get_random_action_goal(goal) # get an action sampled only from valid actions
 
     def select_goal(self, state):
         # print("Select Goal")

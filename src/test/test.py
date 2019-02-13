@@ -1,11 +1,13 @@
 import numpy as np
 from collections import namedtuple
-from hDQN import hDQN
-import impdicts
-from environments import MetaEnv
-import utils
+from ..DQN.hDQN import hDQN
+from ..util import impdicts
+from ..envs.environments import MetaEnv
+from ..util import utils
 import sys
 
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
 
 if len(sys.argv) > 2:
@@ -70,7 +72,7 @@ def main():
                     print("Epsiode : {}".format(episode + episode_thousand*1000))
                     print("Goal : {}, State : {}, Action : {}".format(goal, confidence_state, action))
                     next_confidence_state, intrinsic_reward, goal_reached  = env.controller_step(goal,action) # get the reward at the sub policy level
-                    #exp = ActorExperience(confidence_state,  utils.one_hot(goal, META_OPTION_SIZE), action, intrinsic_reward, next_confidence_state, done)
+                    #exp = ActorExperience(confidence_state,  util.one_hot(goal, META_OPTION_SIZE), action, intrinsic_reward, next_confidence_state, done)
                     #print(exp)
                     #agent.store(exp, meta=False)
                     #agent.update(meta=False)

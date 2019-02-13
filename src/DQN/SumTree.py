@@ -1,4 +1,6 @@
 import numpy
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
 class SumTree:
     write = 0

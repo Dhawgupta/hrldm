@@ -5,13 +5,14 @@ This code is responsiible for training the multi intent model, where the meta po
 
 import numpy as np
 from collections import namedtuple
-from hDQN_multi import *
-import impdicts_multi
-from environments import MetaEnvMulti
-import utils
+from ..DQN.hDQN_multi import *
+from ..util import impdicts_multi
+from ..envs.environments import MetaEnvMulti
+from ..util import utils
 from datetime import datetime
 from time import sleep
-
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
 def main():
     ActorExperience = namedtuple("ActorExperience", ["state", "goal", "action", "reward", "next_state", "done"])

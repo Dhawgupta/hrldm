@@ -13,8 +13,10 @@ from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import SGD, RMSprop
 from keras.models import load_model
 
-import utils
+from ..util import utils
 
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 NO_SLOTS = 8
 META_STATE_SIZE = 5
 META_OPTION_SIZE = 5
@@ -190,7 +192,7 @@ class hDQN:
         vector = np.concatenate([state, goal]) # prepare the vector for controller by concat the 2 states
         if random.random() > self.actor_epsilon[goal_value]:
             return np.argmax(self.actor.predict(vector.reshape([1,CONTROLLER_STATE_SIZE]), verbose=0))
-        return np.random.randint(CONTROLLER_ACTION_SIZE) #TODO   / utils.get_random_action_goal(goal) # get an action sampled only from valid actions
+        return np.random.randint(CONTROLLER_ACTION_SIZE) #TODO   / util.get_random_action_goal(goal) # get an action sampled only from valid actions
 
     def select_goal(self, state):
         # print("Select Goal")

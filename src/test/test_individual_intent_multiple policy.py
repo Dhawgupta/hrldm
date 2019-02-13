@@ -1,14 +1,15 @@
 import numpy as np
 from collections import namedtuple
-from DQN1 import DQNAgent
-import impdicts
-from environments import ControllerEnv
-import utils
+from ..DQN.DQN1 import DQNAgent
+from ..util import impdicts
+from ..envs.environments import ControllerEnv
+from ..util import utils
 import sys
 from time import sleep
 from datetime import datetime
 
-
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
 if len(sys.argv) > 1:
     # the filename has been given

@@ -28,7 +28,7 @@ Actione :
 
 import numpy as np
 import random
-from impdicts import *
+from .impdicts import *
 import sys
 
 NO_SLOTS = 8

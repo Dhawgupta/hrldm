@@ -5,10 +5,14 @@ This enviornment will be hardcoded approach for the proposed system
 
 import numpy as np
 import random
-import utils
-import impdicts
+
+from ..util import utils
+from ..util import impdicts
 from typing import List, Tuple, Dict
 import sys
+import sys, os
+
+sys.path.insert(0, os.path.abspath('..'))
 class MetaEnv:
 
     def __init__(self, w1 : float=  1, w2 : float = 8, w3 : float = 13,   intent_space_size : int = 5, slot_space_size : int  =  8, options_space : int = 5, primitive_action_space : int = 20 ):
@@ -423,6 +427,7 @@ class ControllerEnv:
         return self.current_slot_state, reward, False
 
 
+# This Enviornment is meant to have multiple intents at a given time , hence have 6 options
 class MetaEnvMulti:
 
     def __init__(self, w1 : float=  1, w2 : float = 8, w3 : float = 13,   intent_space_size : int = 5, slot_space_size : int  =  8, options_space : int = 6, primitive_action_space : int = 20 ):
@@ -488,7 +493,7 @@ class MetaEnvMulti:
         self.current_intent_group_no = 0 # Keeps track of the intent number being served
         self.intent_states = np.array([ utils.multi_hot(self.curret_obj_intent_groups[self.current_intent_group_no], self.intent_space_size)]) # setting the starting intent
 
-        # self.intent_states = np.array([ utils.one_hot( self.current_obj_intent[self.current_intent_no], self.intent_space_size)]) # setting the starting intent
+        # self.intent_states = np.array([ util.one_hot( self.current_obj_intent[self.current_intent_no], self.intent_space_size)]) # setting the starting intent
         self.current_intent_state = self.intent_states[-1]
         return [self.current_slot_state, self.current_intent_state]
 
@@ -627,6 +632,8 @@ class MetaEnvMulti:
 
         :return:
         """
+
+
     def meta_step_end_legacy1(self, option) -> Tuple[int, float, bool]  :
         """
 
@@ -676,3 +683,11 @@ class MetaEnvMulti:
         """
         slots_to_be_checked = impdicts.intent2slots[goal] # these are the slots
         return all(self.current_slot_state[slots_to_be_checked] > self.threshold)
+
+    def constrain_options(self):
+        '''
+        THis is only a dummy function and just returns the list of options
+        :return:
+        '''
+        return list(range(self.options_space))
+

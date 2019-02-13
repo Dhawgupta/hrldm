@@ -1,11 +1,14 @@
 import numpy as np
 from collections import namedtuple
-from hDQN import hDQN
-import impdicts
-from environments import MetaEnv
-import utils
+from ..DQN.hDQN import hDQN
+from ..util import impdicts
+from ..envs.environments import MetaEnv
+from ..util import utils
 from datetime import datetime
 from time import sleep
+
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
 NO_SLOTS = 8
 META_STATE_SIZE = 5

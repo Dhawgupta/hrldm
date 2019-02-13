@@ -3,7 +3,6 @@ Read the DQN1 once and use that for the time being
 """
 
 import random
-import gym
 import numpy as np
 from collections import deque
 from keras.models import Sequential
@@ -14,8 +13,10 @@ from keras import optimizers
 from keras.models import load_model
 import time
 
-from SumTree import SumTree
+from .SumTree import SumTree
 
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
 class Memory:   # stored as ( s, a, r, s_ ) in SumTree
     e = 0.01
@@ -293,11 +294,11 @@ class DQNAgent:
         # saveIn tells us
         print("saving in .... {}".format(name))
         if (self.loadname is None) or (self.saveInLoaded is False):
-            print "Saving in without loading : {}".format(name)
+            print ("Saving in without loading : {}".format(name))
             # self.model.save_weights(name)
             self.model.save(name)
         elif self.saveInLoaded is True and self.loadname is not None:
-            print "Saving in : {}".format(self.loadname)
+            print( "Saving in : {}".format(self.loadname))
             # self.model.save_weights(self.loadname)
             self.model.save(self.loadname)
         else:
