@@ -614,6 +614,7 @@ class MetaEnvMulti:
     def meta_step_end(self, option):
         done = False
         reward = 0
+        print("The option picked up is : {}".format(option))
         if option == 5: # we need to switch to the next set of intents
             # We Will check if it has filled all the relevant slots for the intents and reward it appropritaley for each slot filled
 
@@ -624,11 +625,16 @@ class MetaEnvMulti:
             reward = self.user_agent_reward() # THis function will return the reward for the user agnet action,
             self.current_intent_group_no +=1
             # check if we are done with the thing or not. I.e. if we are equal with the number of groups
+            print(self.current_obj_intent_groups)
+            print(self.current_intent_group_no)
+            # self.intent_state = utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no], 5)
             if self.current_intent_group_no >= intent_groups:
                 done = True
+            else:
+                self.current_intent_state = utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no], 5)
                 # dont change the intente state
-            self.intent_state = utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no])
-            return self.latest_start_confidence_start, self.current_slot_state, self.intent_state, reward, done
+
+            return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state, reward, done
             # TODO we also need to penalize the agent for extra steps that it takes to acheive a certain task because, it should pick the most effecient process
         else:
             reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
@@ -648,7 +654,7 @@ class MetaEnvMulti:
         """
         relevant_slots = []
         for each_goal in self.current_obj_intent_groups[self.current_intent_group_no]:
-            relevant_slots = np.concatenate([relevants_slots, impdicts.intent2slots[each_goal]])
+            relevant_slots = np.concatenate([relevant_slots, impdicts.intent2slots[each_goal]])
         relevant_slots = list(set(np.array(relevant_slots, dtype=np.int32)))
         # these are the relevant slots checl the value for these
         correct =  all(self.current_slot_state[relevant_slots] > self.threshold)

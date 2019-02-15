@@ -44,6 +44,7 @@ ap.add_argument('-ns','--number-slots',required=False , help = 'The number of co
 ap.add_argument('-ni','--number-intents',required = False, help = 'The Number of intents that the domain has', type = int, default = 5)
 ap.add_argument('-no','--number-options',required=False, help='The number of options for the meta policy', type = int, default = 6)
 ap.add_argument('-ca','--controller-action', required = False, help = 'The Number of Controller Actions, although thte code is designed to work for only 20 action as of now', type = int, default = 20 )
+ap.add_argument('-p','--save-folder',required = True, help = 'Provide the path to the fodler where we need to store the meta policy',type = str, default = './save/')
 # ap.add_argument('-ln','--loadname',required=False, help = "Give the file to be loaded in the meta policy if yoiu wish to continue training of teh model from a certain point", type = bool , default = )
 # TODO need to enable the facility of the loadname and SaveIn fcaility in the DQN1 program
 
@@ -70,11 +71,11 @@ def main():
 
     MetaAgent = DQNAgent(state_size=META_STATE_SIZE ,action_size= META_OPTION_SIZE, hiddenLayers=[75], dropout = args['dropout'], activation = 'relu',loadname = None, saveIn = False, learningRate=args['learning_rate'], discountFactor= args['discount_factor'])
 
+    filename = args['save_folder']
     if 'meta-weights' not in args.keys():
-        filename = "./save/Meta_    "
-        filename = "_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_all_intents_in_one.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES))
+        filename = "{}Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_all_intents_in_one.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES))
     else:
-        filename = args['meta_weights']
+        filename = filename + args['meta_weights']
 
     # See if the user has given the hidden layer configuration for option_agnet
     nodes_hidden = [75] # defaulr value
@@ -101,6 +102,8 @@ def main():
         # visits[episode_thousand][state] += 1
         done = False # Running the meta polciy
         while not done:  # The Loop i whcih meta policy act
+            print("Round Meta : {e}")
+
             all_options = env.constrain_options()
             state = np.concatenate([confidence_state, intent_state])
 
@@ -118,7 +121,10 @@ def main():
                 option_completed = False
                 # make a one hot goal vector
                 goal_vector = utils.one_hot(option, NO_INTENTS)
+                i_ = 0
                 while not option_completed:
+                    print("Inside Controller Policy : {}".format(i_) )
+                    i_ += 1
                     opt_actions = range(CONTROLLER_ACTION_SIZE) # Currently it is the while possible actions size
                     controller_state = np.concatenate([next_confidence_state, goal_vector])
                     controller_state = controller_state.reshape(1, CONTROLLER_STATE_SIZE)
@@ -161,7 +167,7 @@ def main():
             # Saving the progress
             print("Saving")
             # convert this to save model for each policy
-            agent.save(filename)
+            MetaAgent.save(filename)
             # agent.saveController(fileController)
             sleep(0.2)
             print("Done Saving You can Now Quit")

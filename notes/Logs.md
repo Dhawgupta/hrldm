@@ -145,3 +145,10 @@ Today I have started with the propoer implmeemntaiton of the meta policy trainin
  
 4. I have done completed the implemenetaiton, but I have yet to check for the bugs and also add the provision of arguemnt parsing.
 
+## 15/2/19
+Today I have almost finished the implementation of the meta policy.
+Issues: 
+1. Sometimes the controller polciy is not taking the quitting action, whcih is worry some, I think we should put some sort of max episode limit
+
+
+
