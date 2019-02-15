@@ -109,6 +109,7 @@ def main():
 
             option = MetaAgent.act(state, all_options, epsilon=epsilon) # TODO handle the 6 option chocie
             next_confidence_state = env.meta_step_start(option)  # get the reward at the sub policy level
+            meta_reward = 0
             if option == 5: # the user agent option:
                 pass
             else:
@@ -129,7 +130,7 @@ def main():
                 next_confidence_state = next_confidence_state
                 ###############################################
 
-                confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end(option)
+            confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end(option)
 
 
             meta_end_state = np.concatenate([next_confidence_state, intent_state])
