@@ -1,6 +1,9 @@
 """
 According to Diff checker the SumTree1 and SumTree are same and the only DIfference between DQN1 and DQN is the DiscountFactor in the DQN Agent . In DQN1 it is 0.9 and in DQN it is 0.7
 """
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
+os.environ["TF_CPP_MIN_LOG_LEVEL"]="3"
 import random
 
 import numpy as np
@@ -12,11 +15,8 @@ from keras.optimizers import Adam
 from keras import optimizers
 from keras.models import load_model
 import time
-import os
-
 from .SumTree1 import SumTree
-import sys, os
-sys.path.insert(0, os.path.abspath('..'))
+
 import tensorflow as tf
 from keras import backend as k
 from keras.backend.tensorflow_backend import set_session
