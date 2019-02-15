@@ -6,6 +6,8 @@ weights_1.h5 for intent1 (or number 2 intent)
 Points
 1. This is based for singel neural network as the controller polciy
 2, In this implementation we will discrad the previosu intent (many hot) vector and move onto the next vector
+Notes ;
+1. Add the extra note file facility to the naming thing
 
 
 '''
@@ -75,7 +77,7 @@ def main():
 
     filename = args['save_folder']
     if 'meta-weights' not in args.keys():
-        filename = "{}Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_all_intents_in_one.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES))
+        filename = "{}Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_{}.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES), args['note_file'])
     else:
         filename = filename + args['meta_weights']
 
@@ -104,7 +106,7 @@ def main():
         # visits[episode_thousand][state] += 1
         done = False # Running the meta polciy
         while not done:  # The Loop i whcih meta policy act
-            print("Round Meta : {}".format(e))
+            print("Round Meta : {}".format(episode))
 
             all_options = env.constrain_options()
             state = np.concatenate([confidence_state, intent_state])
