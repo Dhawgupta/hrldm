@@ -45,7 +45,9 @@ ap.add_argument('-ni','--number-intents',required = False, help = 'The Number of
 ap.add_argument('-no','--number-options',required=False, help='The number of options for the meta policy', type = int, default = 6)
 ap.add_argument('-ca','--controller-action', required = False, help = 'The Number of Controller Actions, although thte code is designed to work for only 20 action as of now', type = int, default = 20 )
 ap.add_argument('-p','--save-folder',required = True, help = 'Provide the path to the fodler where we need to store the meta policy',type = str, default = './save/')
+ap.add_argument('-bcl','--break-controller-loop',help = 'Sometimes the Controller POlicy tends to be stuck in infiint loop, to remedy this we will restrict its runs to some value', type = int, default = 100)
 # ap.add_argument('-ln','--loadname',required=False, help = "Give the file to be loaded in the meta policy if yoiu wish to continue training of teh model from a certain point", type = bool , default = )
+ap.add_argument('-nf','--note-file', required = False, help = 'Give a special note that might be needed to add at the end of the file name id the user is not providing the dfile name', default = '')
 # TODO need to enable the facility of the loadname and SaveIn fcaility in the DQN1 program
 
 args  = vars(ap.parse_args())
@@ -102,7 +104,7 @@ def main():
         # visits[episode_thousand][state] += 1
         done = False # Running the meta polciy
         while not done:  # The Loop i whcih meta policy act
-            print("Round Meta : {e}")
+            print("Round Meta : {}".format(e))
 
             all_options = env.constrain_options()
             state = np.concatenate([confidence_state, intent_state])
@@ -122,18 +124,16 @@ def main():
                 # make a one hot goal vector
                 goal_vector = utils.one_hot(option, NO_INTENTS)
                 i_ = 0
+                controller_state = np.concatenate([next_confidence_state, goal_vector])
+                controller_state = controller_state.reshape(1, CONTROLLER_STATE_SIZE)
                 while not option_completed:
-                    print("Inside Controller Policy : {}".format(i_) )
-                    i_ += 1
                     opt_actions = range(CONTROLLER_ACTION_SIZE) # Currently it is the while possible actions size
-                    controller_state = np.concatenate([next_confidence_state, goal_vector])
-                    controller_state = controller_state.reshape(1, CONTROLLER_STATE_SIZE)
                     action = option_agent.act(controller_state, all_act = opt_actions, epsilon = 0 ) # provide episone for greedy approach
                     next_confidence_state, _, option_completed = env.controller_step(option, action)
                     next_controller_state = np.concatenate([next_confidence_state, goal_vector])
                     next_controller_state = np.reshape(next_controller_state, [1, CONTROLLER_STATE_SIZE])
                     # we dont need to store the experience replay memory for the controller policy
-                next_confidence_state = next_confidence_state
+                    controller_state = next_controller_state
                 ###############################################
 
             confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end(option)
