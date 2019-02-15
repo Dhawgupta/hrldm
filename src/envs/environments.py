@@ -625,8 +625,8 @@ class MetaEnvMulti:
             reward = self.user_agent_reward() # THis function will return the reward for the user agnet action,
             self.current_intent_group_no +=1
             # check if we are done with the thing or not. I.e. if we are equal with the number of groups
-            print(self.current_obj_intent_groups)
-            print(self.current_intent_group_no)
+            # print(self.current_obj_intent_groups)
+            # print(self.current_intent_group_no)
             # self.intent_state = utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no], 5)
             if self.current_intent_group_no >= intent_groups:
                 done = True

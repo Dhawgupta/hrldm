@@ -97,8 +97,8 @@ def main():
     batch_size = 64
     track = []
     i = 0
-    for episode in range(EPISODES):
-        # Now sample the next set of options from env
+    no_controller_breaks = 0
+    for episode in range(EPISODES):  # Episode
         goal = np.random.randint(META_OPTION_SIZE) # randomly sample a option to pursue
         running_reward = 0
         [confidence_state, intent_state] = env.reset() #
@@ -117,6 +117,7 @@ def main():
             option = MetaAgent.act(state, all_options, epsilon=epsilon) # TODO handle the 6 option chocie
             next_confidence_state = env.meta_step_start(option)  # get the reward at the sub policy level
             meta_reward = 0
+            print("The state : {}\nThe option : {}".format(meta_start_state, option))
             if option == 5: # the user agent option:
                 pass
             else:
@@ -136,6 +137,11 @@ def main():
                     next_controller_state = np.reshape(next_controller_state, [1, CONTROLLER_STATE_SIZE])
                     # we dont need to store the experience replay memory for the controller policy
                     controller_state = next_controller_state
+                    i_ +=  1
+                    if i_ > args['break_controller_loop']:
+                        no_controller_breaks +=1
+                        break
+
                 ###############################################
 
             confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end(option)
@@ -144,6 +150,7 @@ def main():
             meta_end_state = np.concatenate([next_confidence_state, intent_state])
             meta_end_state = meta_end_state.reshape([1, META_STATE_SIZE])
             epsilon = MetaAgent.observe((meta_start_state, option,meta_reward, meta_end_state ,done), epsilon= epsilon )
+            print("The next meta state : {}\n The reward : {}\nEpsilon : {}".format(meta_end_state, meta_reward, epsilon))
             if MetaAgent.memory.tree.total() > batch_size:
                 MetaAgent.replay()
                 MetaAgent.rem_rew(meta_reward)
@@ -158,9 +165,11 @@ def main():
                         fi.write(str(line).strip("[]''") + "\n")
             # print(track)
             if done:
-                print("episode: {}/{}, score: {}, e's: {}".format(episode, EPISODES, running_reward, epsilon))
+                print("episode: {}/{}, score: {}, e's: {}\nNumber of Controller breaks : {}".format(episode, EPISODES, running_reward, epsilon, no_controller_breaks))
+
                 print("The state is : ", meta_end_state)
                 break
+
 
             confidence_state = next_confidence_state
 
