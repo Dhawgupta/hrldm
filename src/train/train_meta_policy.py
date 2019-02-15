@@ -10,48 +10,74 @@ Points
 
 '''
 
-
-import numpy as np
-from ..DQN.DQN1 import DQNAgent
-from collections import namedtuple
-from ..util import impdicts
-from ..envs.environments import MetaEnvMulti
-from ..util import utils
-from time import sleep
-from datetime import datetime
-from typing import List, Tuple, Dict
-
-# TODO build an argparse for the weights folder
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
-NO_SLOTS = 8
-NO_INTENTS = 5
+import numpy as np
+from src.DQN.DQN1 import DQNAgent
+from collections import namedtuple
+from src.util import impdicts
+from src.envs.environments import MetaEnvMulti
+from src.util import utils
+from time import sleep
+from datetime import datetime
+from typing import List, Tuple, Dict
+import argparse
+
+ap = argparse.ArgumentParser()
+ap.add_argument('-cw','--controller-weights',required = True, help = "Weight for the controller policy model (i..e Mention  the file from whcih we need to load the qweights)")
+# add the training parameters
+ap.add_argument('-e','--episodes',required = False ,help='The number of episodes that the Meta Policy should train for.) If not specified then a default method will be used to save the file', type = int)
+ap.add_argument('-mw','--meta-weights', required=False, help = "The Weights of the meta policy to be used for training (i.e. the file tobe saved for the same")
+
+ap.add_argument('-gpu','--set-gpu', required=False,help ='Give the GPU number, if GPU is to be used, otherwise dont mention for run on CPU', type = int)
+
+ap.add_argument('-lr','--learning-rate',required=False, default=0.05,type = float, help= 'The learning rate for meta policy training')
+ap.add_argument('-df','--discount-factor',required = False, default = 0.7, type = float , help = 'THe Discount factor for the learning of meta polciy')
+ap.add_argument('-do','--dropout',required = False,default = 0.00, type = float, help = 'The dropout probabliltiy for the meta policy training')
+
+ap.add_argument('-ch', '--controller-hidden', required = False, help = "The Hidden Layers  configuration of the Controller Policym This portion is not yet implemeneted in the Code \nFormat : n1_n2_n3 ..  , tells n1 nodes in layer 1 , n2 nodes in layer 2 , n3 nodes in layer 3 and so on.", type = int , default = '75')
+ap.add_argument('-ns','--number-slots',required=False , help = 'The number of confidence slots in the domain', type = int, default = 8)
+ap.add_argument('-ni','--number-intents',required = False, help = 'The Number of intents that the domain has', type = int, default = 5)
+ap.add_argument('-no','--number-options',required=False, help='The number of options for the meta policy', type = int, default = 6)
+ap.add_argument('-ca','--controller-action', required = False, help = 'The Number of Controller Actions, although thte code is designed to work for only 20 action as of now', type = int, default = 20 )
+
+args  = vars(ap.parse_args())
+
+# TODO build an argparse for the weights folder
+
+NO_SLOTS = args['number-slots']
+NO_INTENTS = args['number-intents']
+META_OPTION_SIZE = args['number-options']
+CONTROLLER_ACTION_SIZE = args['controller-action']
 META_STATE_SIZE = NO_SLOTS + NO_INTENTS
-META_OPTION_SIZE = 6
 CONTROLLER_STATE_SIZE = NO_SLOTS + NO_INTENTS
-CONTROLLER_ACTION_SIZE = 20
+
 
 
 def main():
-    filename = "./save/Meta_"
+
     epsilon = 1
     env = MetaEnvMulti()  # TODO
     EPISODES = 300000 # To set this accordingly
     a = str(datetime.now()).split('.')[0]
-    MetaAgent = DQNAgent(state_size=META_STATE_SIZE ,action_size= META_OPTION_SIZE, hiddenLayers=[75], dropout = 0.000, activation = 'relu',loadname = None, saveIn = False, learningRate=0.05, discountFactor= 0.7 )
-    filename = "_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_all_intents_in_one.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES))
+    MetaAgent = DQNAgent(state_size=META_STATE_SIZE ,action_size= META_OPTION_SIZE, hiddenLayers=[75], dropout = args['dropout'], activation = 'relu',loadname = None, saveIn = False, learningRate=args['learning-rate'], discountFactor= args['discount-factor'])
 
+    if 'meta-weights' not in args.keys():
+        filename = "./save/Meta_    "
+        filename = "_{}_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_all_intents_in_one.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES))
+    else:
+        filename = args['meta-weights']
+
+    # See if the user has given the hidden layer configuration for option_agnet
+    nodes_hidden = [75] # defaulr value
+    if 'controller-hidden' in args.keys():
+        controller_hidden_config = args['controller-hidden']
+        # extract the array from same
+        nodes_hidden = [int(node) for node in controller_hidden_config.split('_') ]
     # load the agents for the controller , which is single for this case
-    option_agent : DQNAgent = DQNAgent(state_size=CONTROLLER_STATE_SIZE ,action_size= CONTROLLER_ACTION_SIZE, hiddenLayers=[75], dropout = 0.000, activation = 'relu',loadname = None, saveIn = False, learningRate=0.05, discountFactor= 0.7 )# Not mkaing an agent for the user based actions
-    option_agent.load('weights_all.h5') # Load the weight for al the controller policies
-
-    # TODO , replace the above part with lists for multiple pllcicies
-
-
-
-
-    # not we need to set the weight fiels for each model
+    option_agent : DQNAgent = DQNAgent(state_size=CONTROLLER_STATE_SIZE ,action_size= CONTROLLER_ACTION_SIZE, hiddenLayers=nodes_hidden, dropout = 0.000, activation = 'relu',loadname = None, saveIn = False, learningRate=0.05, discountFactor= 0.7 )# Not mkaing an agent for the user based actions
+    option_agent.load(args['controller-weights']) # Load the weight for al the controller policies
 
     visits = np.zeros([META_OPTION_SIZE]) # Store the number of Visits of each intentn tyope
     batch_size = 64
