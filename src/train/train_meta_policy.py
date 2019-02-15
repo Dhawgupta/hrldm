@@ -50,6 +50,7 @@ ap.add_argument('-p','--save-folder',required = True, help = 'Provide the path t
 ap.add_argument('-bcl','--break-controller-loop',help = 'Sometimes the Controller POlicy tends to be stuck in infiint loop, to remedy this we will restrict its runs to some value', type = int, default = 100)
 # ap.add_argument('-ln','--loadname',required=False, help = "Give the file to be loaded in the meta policy if yoiu wish to continue training of teh model from a certain point", type = bool , default = )
 ap.add_argument('-nf','--note-file', required = False, help = 'Give a special note that might be needed to add at the end of the file name id the user is not providing the dfile name', default = '')
+ap.add_argument('-cf','--config-folder',required= True, help = 'Give the folder were we should save the config file ', default = './config/')
 # TODO need to enable the facility of the loadname and SaveIn fcaility in the DQN1 program
 
 args  = vars(ap.parse_args())
@@ -67,7 +68,6 @@ CONTROLLER_STATE_SIZE = NO_SLOTS + NO_INTENTS
 
 
 def main():
-
     epsilon = 1
     env = MetaEnvMulti()  # TODO
     EPISODES = args['episodes']
@@ -98,6 +98,14 @@ def main():
     track = []
     i = 0
     no_controller_breaks = 0
+    # TODO Write the specification of the parameters to a configuration file
+    config_file = '{}{}.txt'.format(args['config_folder'], a)
+
+    with open(config_file, 'w') as fil:
+        fil.write(str(args))
+        fil.write("FileName : {}".format(filename))
+
+
     for episode in range(EPISODES):  # Episode
         goal = np.random.randint(META_OPTION_SIZE) # randomly sample a option to pursue
         running_reward = 0
@@ -173,7 +181,7 @@ def main():
 
             confidence_state = next_confidence_state
 
-        if episode % 100 == 0:
+        if episode % 2 == 0:
             print("Episodes : {}".format(episode))
             # Saving the progress
             print("Saving")
