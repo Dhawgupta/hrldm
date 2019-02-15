@@ -12,6 +12,7 @@ Points
 
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../..'))
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 os.environ["TF_CPP_MIN_LOG_LEVEL"]="3"
