@@ -637,18 +637,57 @@ class MetaEnvMulti:
             return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state, reward, done
             # TODO we also need to penalize the agent for extra steps that it takes to acheive a certain task because, it should pick the most effecient process
         else:
+            # FIXME  : 19.2.19
+            # TODO , currently the wrong option is not being penzliaed , we have to implmemnt to change the intent space whrn the option is picked and that intent has to be remoced gtom the state and for a wrong option we should give
             reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
             # the current_intent_state should not change
             return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
 
-    def user_agent_reward(self):
+
+    def meta_step_end2(self, option):
+        """
+        This works on the following modes
+        1. intent-state-mod2
+        2. meta-reward-2
+        3. meta-state-1
+        :param option:
+        :return: The updated intent staet, after remobing option from it and the appropriate reward
+        """
+        done = False
+        reward = 0
+        print("The option picked up is : {}".format(option))
+        if option == 5:
+            # TODO Changes from first : ( we check if there are active intents , if yes we penalize the agent with -w2
+            if np.sum(self.current_intent_state) > 0.01 :
+                reward = -self.w2
+            # And also modify the next intent state
+            intent_groups = len(self.current_obj_intent_groups) # this gives the number of intent grousp that we need to cycel thoufh
+            reward = self.user_agent_reward()
+            self.current_intent_group_no +=1
+            if self.current_intent_group_no >= intent_groups:
+                done = True
+            else:
+                self.current_intent_state = utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no], 5)
+                # TODO change the intenet stat
+
+            return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state, reward, done
+        else:
+            # FIXME  : 19.2.19
+            # TODO , currently the wrong option is not being penzliaed , we have to implmemnt to change the intent space whrn the option is picked and that intent has to be remoced gtom the state and for a wrong option we should give
+            # self.current_intent_state contains all the relevant intents
+            reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
+            # the current_intent_state should not change
+            return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
+
+    def user_agent_reward0(self):
 
         """
         We will requrie teh use of
         self.current_slot_state
         self.current_intent_state
         We will return the matching slots for the intetnts specifficed bt current intent state and award the policy for filling all those slots
-
+        THi
+        # TODO
 
         :return: A scalar reward value
         """
@@ -661,9 +700,9 @@ class MetaEnvMulti:
         if correct:
             # give reward for all the slots
             # return self.w1*
-            return self.w1*np.sum(self.current_slot_state[relevant_slots])
+            return self.w2*np.sum(self.current_slot_state[relevant_slots])
         else:
-            return -self.w1*(float(len(self.current_slot_state[relevant_slots])) - np.sum(self.current_slot_state[relevant_slots])) # Subtract the remaining confidence values of the slots that is requried to fill the same.
+            return -self.w2*(float(len(self.current_slot_state[relevant_slots])) - np.sum(self.current_slot_state[relevant_slots])) # Subtract the remaining confidence values of the slots that is requried to fill the same.
                              #FIXME Check the validityi of this reward fucntio for agnet
 
     def meta_step_end_legacy1(self, option) -> Tuple[int, float, bool]  :

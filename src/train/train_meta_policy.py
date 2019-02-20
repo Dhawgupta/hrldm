@@ -1,4 +1,10 @@
 '''
+#########################################
+# FEATUREs :
+1. intent-state-mod1
+2. meta-reward-1
+3. meta-state-1
+##########################################
 This code focuses on training the meta policy for the DM that we have proposed.
 This implementation will focus on training the meta [polciy for a single controller network for multiple intent policies.
 The intent weights files need to be of the format
@@ -8,8 +14,10 @@ Points
 2, In this implementation we will discrad the previosu intent (many hot) vector and move onto the next vector
 Notes ;
 1. Add the extra note file facility to the naming thing
+# FIXED : 1. Fixed the naming thing in the filename for note-file command line argument
+2. We were givin w1 scaled reward in the meta policy steps whcih was wtong, we had to give w2 , so that has been corrected
 
-
+˜
 '''
 
 import sys, os
@@ -46,7 +54,7 @@ ap.add_argument('-ns','--number-slots',required=False , help = 'The number of co
 ap.add_argument('-ni','--number-intents',required = False, help = 'The Number of intents that the domain has', type = int, default = 5)
 ap.add_argument('-no','--number-options',required=False, help='The number of options for the meta policy', type = int, default = 6)
 ap.add_argument('-ca','--controller-action', required = False, help = 'The Number of Controller Actions, although thte code is designed to work for only 20 action as of now', type = int, default = 20 )
-ap.add_argument('-p','--save-folder',required = True, help = 'Provide the path to the fodler where we need to store the meta policy',type = str, default = './save/')
+ap.add_argument('-p','--save-folder',required = True, help = 'Provide the path to the fodler where we need to store the meta policy. Also include the trailing / in this ',type = str, default = './save/')
 ap.add_argument('-bcl','--break-controller-loop',help = 'Sometimes the Controller POlicy tends to be stuck in infiint loop, to remedy this we will restrict its runs to some value', type = int, default = 100)
 # ap.add_argument('-ln','--loadname',required=False, help = "Give the file to be loaded in the meta policy if yoiu wish to continue training of teh model from a certain point", type = bool , default = )
 ap.add_argument('-nf','--note-file', required = False, help = 'Give a special note that might be needed to add at the end of the file name id the user is not providing the dfile name', default = '')
@@ -77,7 +85,7 @@ def main():
 
     filename = args['save_folder']
     if 'meta-weights' not in args.keys():
-        filename = "{}Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_{}.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES), args['note_file'])
+        filename = "{}{}Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_{}.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES), args['note_file'])
     else:
         filename = filename + args['meta_weights']
 
@@ -181,7 +189,7 @@ def main():
 
             confidence_state = next_confidence_state
 
-        if episode % 2 == 0:
+        if episode % 200 == 0:
             print("Episodes : {}".format(episode))
             # Saving the progress
             print("Saving")
@@ -198,7 +206,7 @@ def main():
 if __name__ == "__main__":
     if args['set_gpu'] is not None:
         print("Using the GPU ")
-        DQNAgent.setup_gpu(int(args['set_gpu']))
+        DQNAgent.setup_gpu(str(args['set_gpu']))
     else:
         print("{LOG} Using the CPU for Computation")
         pass
