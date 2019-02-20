@@ -5,6 +5,8 @@ author : Dhawal Gupta
 1. intent-state-mod2
 2. meta-reward-2
 3. meta-state-1
+4. controller-type-2
+
 Other changes done :
 1. If the agent picks option 5 even when all the intents are not served, I am giving a negative rewward of -self.w2, And the uncompleted intents will not be carried onto the next intetn state from tehat option onwards
 2. user_agent_reward : Ealoer I was thinking of penalizing teh agent when picking the user agent reward with the negative of the slots its had filled, but we are not mainting teh starting slots of before all the intents of teh current intent batcn, although I will still implmement this. For this will be acting like another hierarchy
@@ -81,7 +83,7 @@ def main():
 
     filename = args['save_folder']
     if 'meta-weights' not in args.keys():
-        filename = "{}{}_Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_{}.h5".format(filename, a , str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES), args['note_file'])
+        filename = "{}{}_Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_single_nn_policy{}.h5".format(filename, a , str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES), args['note_file'])
     else:
         filename = filename + args['meta_weights']
 

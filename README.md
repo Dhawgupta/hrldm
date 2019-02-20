@@ -36,5 +36,10 @@ slot-space : [s0,s1,s2,s3,s4,s5,s6,s7]
 meta-state : [i0,i1,i2,i3,i4]
 ```
 
+**controller-type-1** : This is the single neural network based controller policu that will be used for trianing the meta policy
+
+**controller-type-2** : In this case the indificual neural net will be used for each intent in the controller policy part.
+
+
 
 

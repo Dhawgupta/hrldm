@@ -4,6 +4,7 @@
 1. intent-state-mod1
 2. meta-reward-1
 3. meta-state-1
+4. controller-type-1
 ##########################################
 This code focuses on training the meta policy for the DM that we have proposed.
 This implementation will focus on training the meta [polciy for a single controller network for multiple intent policies.
@@ -85,7 +86,7 @@ def main():
 
     filename = args['save_folder']
     if 'meta-weights' not in args.keys():
-        filename = "{}{}Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_{}.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES), args['note_file'])
+        filename = "{}{}Meta_HiddenLayers_{}_Dropout_{}_LearningRate_{}_Gamma_{}_Activation_{}_Episode_{}_single_nn_policy{}.h5".format(filename, a ,str(MetaAgent.hiddenLayers), str(MetaAgent.dropout) , str(MetaAgent.learning_rate), str(MetaAgent.gamma), MetaAgent.activation, str(EPISODES), args['note_file'])
     else:
         filename = filename + args['meta_weights']
 
