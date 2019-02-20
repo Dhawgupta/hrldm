@@ -150,5 +150,11 @@ Today I have almost finished the implementation of the meta policy.
 Issues: 
 1. Sometimes the controller polciy is not taking the quitting action, whcih is worry some, I think we should put some sort of max episode limit
 
+# 19/2/19
 
 
+
+
+# 20/2/19
+implmemented the updated more power reweard fcuntion in the caswe of teh train_meta2.py
+2. Still the readme requried update about the implmementation of the vartious properties of the rweward that are written under the file `train_meta2.py`

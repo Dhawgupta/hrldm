@@ -30,7 +30,7 @@ import numpy as np
 from src.DQN.DQN1 import DQNAgent
 from collections import namedtuple
 from src.util import impdicts
-from src.envs.environments import MetaEnvMulti
+from src.envs.metaenvmulti import MetaEnvMulti
 from src.util import utils
 from time import sleep
 from datetime import datetime

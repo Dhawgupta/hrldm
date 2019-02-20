@@ -660,9 +660,10 @@ class MetaEnvMulti:
             # TODO Changes from first : ( we check if there are active intents , if yes we penalize the agent with -w2
             if np.sum(self.current_intent_state) > 0.01 :
                 reward = -self.w2
-            # And also modify the next intent state
+            else:
+                reward = self.user_agent_reward()
             intent_groups = len(self.current_obj_intent_groups) # this gives the number of intent grousp that we need to cycel thoufh
-            reward = self.user_agent_reward()
+
             self.current_intent_group_no +=1
             if self.current_intent_group_no >= intent_groups:
                 done = True
@@ -679,16 +680,13 @@ class MetaEnvMulti:
             # the current_intent_state should not change
             return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
 
-    def user_agent_reward0(self):
+    def user_agent_reward(self):
 
         """
         We will requrie teh use of
         self.current_slot_state
         self.current_intent_state
         We will return the matching slots for the intetnts specifficed bt current intent state and award the policy for filling all those slots
-        THi
-        # TODO
-
         :return: A scalar reward value
         """
         relevant_slots = []
@@ -703,7 +701,13 @@ class MetaEnvMulti:
             return self.w2*np.sum(self.current_slot_state[relevant_slots])
         else:
             return -self.w2*(float(len(self.current_slot_state[relevant_slots])) - np.sum(self.current_slot_state[relevant_slots])) # Subtract the remaining confidence values of the slots that is requried to fill the same.
-                             #FIXME Check the validityi of this reward fucntio for agnet
+    #
+    def user_agent_reward2(self):
+        '''
+        Implementation of the user rewward function which panelizes the fiollling the filling of wrong slots.
+        Variables Introduced : self.starting_slot_state_intent_group : This will contain the confidence values of the starting slot state when beginning the given intent group
+        :return:
+        '''
 
     def meta_step_end_legacy1(self, option) -> Tuple[int, float, bool]  :
         """
