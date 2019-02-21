@@ -261,10 +261,11 @@ class MetaEnvMulti:
             # TODO , currently the wrong option is not being penzliaed , we have to implmemnt to change the intent space whrn the option is picked and that intent has to be remoced gtom the state and for a wrong option we should give
             # check option in the intent state or not
             if self.current_intent_state[option] < 0.01 :  # i.e. zero
-                return -self.w1 # the negative reward of an iteration
+                reward =  -self.w1 # the negative reward of an iteration
 
             # self.current_intent_state contains all the relevant intents
-            reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
+            else:
+                reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
             # the current_intent_state should not change
             self.current_intent_state[option] = 0.0
             return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
