@@ -309,7 +309,7 @@ class MetaEnvMulti:
         # FIXME not checking the threshold values for the correct slots
         pos_rew = self.current_slot_state[relevant_slots] - self.starting_slot_state_intent_group[relevant_slots]
         neg_rew = self.current_slot_state[non_relevant_slots] + self.starting_slot_state_intent_group[non_relevant_slots]
-        return self.w2 * (pos_rew - neg_rew)
+        return self.w2 * (np.sum(pos_rew) - np.sum(neg_rew))
 
 
 

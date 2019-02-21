@@ -16,6 +16,11 @@ Other changes done :
 Changes requried L:
 1. Used the meta-step-end2
 
+
+#################
+The connand to be used :
+python train_meta2.py -cw ../../save/cpu_all_in_one_75_300000.h5 -e 100000 -p ../../saveMeta/ -nf _meta_reward_2_ -cf ../../config/ -bcl 30 |& tee ../../output_100000.txt
+
 '''
 
 import sys, os
@@ -155,7 +160,7 @@ def main():
 
                 ###############################################
 
-            confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end(option)
+            confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end2(option)
 
 
             meta_end_state = np.concatenate([next_confidence_state, intent_state])
