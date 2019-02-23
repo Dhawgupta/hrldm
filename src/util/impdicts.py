@@ -76,31 +76,4 @@ hybridActions = [8,9,10]
 reaskActions = [11,12,13,14,15,16,17,18]
 
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-    def printblue(  string):
-        print("{}{}{}".format(bcolors.OKBLUE, string, bcolors.ENDC))
-    def printgreen(  string):
-        print("{}{}{}".format(bcolors.OKGREEN, string, bcolors.ENDC))
-    def printwarning(  string):
-        print("{}{}{}".format(bcolors.WARNING, string, bcolors.ENDC))
-    def printfail(  string):
-        print("{}{}{}".format(bcolors.FAIL, string, bcolors.ENDC))
-    def printbold(  string):
-        print("{}{}{}".format(bcolors.BOLD, string, bcolors.ENDC))
-    def printunderline(  string):
-        print("{}{}{}".format(bcolors.UNDERLINE, string, bcolors.ENDC))
-    def printbold(  string):
-        print("{}{}{}".format(bcolors.HEADER, string, bcolors.ENDC))
-
-# print bcolors.WARNING + "Warning: No active frommets remain. Continue?"
-#       + bcolors.ENDC
 

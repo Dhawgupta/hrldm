@@ -12,7 +12,7 @@ from collections import namedtuple
 from src.util import impdicts
 from src.envs.metaenvmulti import MetaEnvMulti
 from src.util import utils
-from src.util.impdicts import bcolors
+from src.util.utils import bcolors
 from time import sleep
 from datetime import datetime
 from typing import List, Tuple, Dict
