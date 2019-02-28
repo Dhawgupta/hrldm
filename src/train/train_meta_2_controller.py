@@ -1,5 +1,6 @@
 '''
 author : Dhawal Gupta
+Status  : INCOMPLETE
 This progran is similar to the train_meta2, except for the provision of training the convtroller policy also, with a very low learning rate and saving it into another file.
 
 
@@ -11,6 +12,7 @@ This progran is similar to the train_meta2, except for the provision of training
 4. controller-type-2
 #############################################
 I am alsio going to use a color coded otput for ewasir eeading of code.
+
 '''
 
 
