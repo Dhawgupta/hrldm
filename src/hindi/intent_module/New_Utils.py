@@ -4,9 +4,13 @@ import numpy as np
 import pickle
 from keras.preprocessing.text import *
 from keras.preprocessing.sequence import pad_sequences
-from Text_Preprocessing import *
+# from Text_Preprocessing import *
 import timeit
-
+import sys
+def printStatus(current,total):
+	done=(current*100.0)/total
+	sys.stdout.write('\rDone : %.2f%%'%(done))
+	sys.stdout.flush()
 
 def saveNumpyArrayCSV(numpy_array,file_name,delimiter=','):
 	np.savetxt(file_name,numpy_array,delimiter=delimiter)
