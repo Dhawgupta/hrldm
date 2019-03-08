@@ -26,6 +26,7 @@ import datetime
 import argparse
 import csv
 import tensorflow as tf
+import codecs
 from keras import backend as k
 from keras.backend.tensorflow_backend import set_session
 ap = argparse.ArgumentParser()
@@ -91,7 +92,7 @@ tokenizer = load_create_tokenizer(train,None,True)
 X_train = load_create_padded_data(X_train=train,savetokenizer=False,isPaddingDone=False,maxlen=sequence_length,tokenizer_path='./New_Tokenizer.tkn')
 X_test = load_create_padded_data(X_train=test,savetokenizer=False,isPaddingDone=False,maxlen=sequence_length,tokenizer_path='./New_Tokenizer.tkn')
 word_index = tokenizer.word_index
-embedding_matrix = load_create_embedding_matrix(word_index,len(word_index)+1,300,'./glove.840B.300d.txt',False,True,'./Emb_Mat.mat')
+embedding_matrix = load_create_embedding_matrix(word_index,len(word_index)+1,300,'./cc.hi.300.vec',False,True,'./Emb_Mat.mat')
 
 
 Y_test=[]

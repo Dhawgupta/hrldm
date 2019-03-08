@@ -4,9 +4,12 @@ import numpy as np
 import pickle
 from keras.preprocessing.text import *
 from keras.preprocessing.sequence import pad_sequences
+from sklearn.model_selection import GridSearchCV
+from sklearn import svm
 # from Text_Preprocessing import *
 import timeit
 import sys
+import codecs
 def printStatus(current,total):
 	done=(current*100.0)/total
 	sys.stdout.write('\rDone : %.2f%%'%(done))
@@ -17,13 +20,14 @@ def saveNumpyArrayCSV(numpy_array,file_name,delimiter=','):
 
 #Writes object_to_dump in file at location 'path'
 def dumpPickle(path,object_to_dump):
-	f=open(path,'w')
+	# f = codecs.open(path,'wb', encoding = 'utf-8')
+	f = open(path,'wb')
 	pickle.dump(object_to_dump,f)
 	f.close()
 
 #Reads an object stores at 'path'
 def readPickle(path):
-	f=open(path)
+	f = open(path,'rb')
 	ob_to_load=pickle.load(f)
 	f.close()
 	return ob_to_load
@@ -34,7 +38,7 @@ def readPickle(path):
 def load_create_embedding_matrix(word_index,vocab_size,emb_dim,emb_path,emb_pickle_path=False,save=False,saveName=None):
 	if not emb_pickle_path:
 		embedding_dict={}
-		f=open(emb_path,'r')
+		f=codecs.open(emb_path,'r', encoding='utf-8')
 		for line in f:
 			fields=line.split()
 			word=fields[0]
@@ -163,7 +167,7 @@ def doc2Mat(doc,emb_path,emb_dim,maxlen,tokenizer_path):
 
 
 #Grid Search for best C and gamma value for a SVM model in sklearn
-from sklearn import svm, grid_search
+
 
 def svc_paramter_selection(X,y, nfolds):
 	cs=[0.001, .01, 0.1, 1, 10]
