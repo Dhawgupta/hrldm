@@ -41,7 +41,7 @@ ap.add_argument('-g','--gpu',required = False, help = "Give the GPU number, put 
 args  = vars(ap.parse_args())
 
 
-def setup_gpu(gpu_id: str):
+def setup_gpu(gpu_id):
 	os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # don't show any messages
 	os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 	os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id
@@ -55,7 +55,7 @@ if args['gpu'] < 0:
 	pass
 else:
 	setup_gpu(str(args['gpu']))
-	
+
 test = []
 train = []
 train_Text = args['train_text']
