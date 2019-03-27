@@ -14,3 +14,7 @@ output/
 results/
 
 
+
+src/hindi/\.DS_Store
+
+src/hindi/slot_module/

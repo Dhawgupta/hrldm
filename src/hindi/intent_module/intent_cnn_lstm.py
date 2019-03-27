@@ -33,7 +33,6 @@ ap = argparse.ArgumentParser()
 # add the training parameters
 ap.add_argument('-xt','--train-text',required = False, help = "Path and filename to the file which contains Text for training data", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_train_text.csv')
 ap.add_argument('-yt','--test-text',required = False, help = "Path and filename to the file containing the test text", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_test_text.csv')
-args  = vars(ap.parse_args())
 
 ap.add_argument('-xl','--train-label',required = False, help = "Path and filename to the file which contains label for training data", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_intent_label_train.txt')
 ap.add_argument('-yl','--test-label',required = False, help = "Path and filename to the file containing the test labels", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_intent_label_test.txt')
