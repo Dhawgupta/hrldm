@@ -265,10 +265,60 @@ class MetaEnvMulti:
 
             # self.current_intent_state contains all the relevant intents
             else:
-                reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)
+                reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)*self.w2
             # the current_intent_state should not change
             self.current_intent_state[option] = 0.0
             return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
+
+    def meta_step_end3(self, option):
+        """
+        This works on the following modes
+        1. intent-state-mod2
+        2. meta-reward-2
+        3. meta-state-1
+        Addition from meta_step_end2 : This will after every options check if slots for any remaining intent are completely filled and then remove theat intent from the intent state
+        :param option:
+        :return: The updated intent staet, after remobing option from it and the appropriate reward
+        """
+        done = False
+        reward = 0
+        print("The option picked up is : {}".format(option))
+        if option == 5:
+            # TODO Changes from first : ( we check if there are active intents , if yes we penalize the agent with -w2
+            if np.sum(self.current_intent_state) > 0.01 :
+                reward = -self.w2
+            else:
+                reward = self.user_agent_reward2()
+            self.starting_slot_state_intent_group - self.current_slot_state.copy()
+            intent_groups = len(self.current_obj_intent_groups) # this gives the number of intent grousp that we need to cycel thoufh
+
+            self.current_intent_group_no +=1
+            if self.current_intent_group_no >= intent_groups:
+                done = True
+            else:
+                self.current_intent_state = utils.multi_hot(self.current_obj_intent_groups[self.current_intent_group_no], 5)
+            return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state, reward, done
+        else:
+            # check option in the intent state or not
+            if self.current_intent_state[option] < 0.01 :  # i.e. zero
+                reward =  -self.w1 # the negative reward of an iteration
+
+            # self.current_intent_state contains all the relevant intents
+            else:
+                reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)*self.w2 # this was a mistake in the revious code
+            # the current_intent_state should not change
+            self.current_intent_state[option] = 0.0
+            for i in range(self.intent_space_size):
+                # if the intent is there
+                if self.current_intent_state[i] > 0.01:
+                    # this intent is yet ro ve served
+                    # check if all teh slots for this intent are folled or not
+                    if self.check_confidence_state(i):
+                        self.current_intent_state[i] = 0.0
+
+
+            return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
+
 
     def user_agent_reward(self):
 

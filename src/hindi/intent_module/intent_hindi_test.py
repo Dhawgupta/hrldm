@@ -1,3 +1,4 @@
+# this code will be used as test to get the intent from hindi sentence
 import pandas as pd
 import numpy as np
 import os
@@ -29,14 +30,13 @@ import tensorflow as tf
 import codecs
 from keras import backend as k
 from keras.backend.tensorflow_backend import set_session
-import sys
 ap = argparse.ArgumentParser()
 # add the training parameters
-ap.add_argument('-xt','--train-text',required = False, help = "Path and filename to the file which contains Text for training data", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_train_text.csv')
+# ap.add_argument('-xt','--train-text',required = False, help = "Path and filename to the file which contains Text for training data", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_train_text.csv')
 ap.add_argument('-yt','--test-text',required = False, help = "Path and filename to the file containing the test text", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_test_text.csv')
 
-ap.add_argument('-xl','--train-label',required = False, help = "Path and filename to the file which contains label for training data", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_intent_label_train.txt')
-ap.add_argument('-yl','--test-label',required = False, help = "Path and filename to the file containing the test labels", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_intent_label_test.txt')
+# ap.add_argument('-xl','--train-label',required = False, help = "Path and filename to the file which contains label for training data", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_intent_label_train.txt')
+# ap.add_argument('-yl','--test-label',required = False, help = "Path and filename to the file containing the test labels", type = str, default = '/Users/dhawgupta/Desktop/Semester-8/BTP/Codes/hrldm/src/hindi/misc/atis_hindi_intent_label_test.txt')
 ap.add_argument('-g','--gpu',required = False, help = "Give the GPU number, put -1 to not use the GPU", type = int, default = -1)
 
 args  = vars(ap.parse_args())
@@ -57,15 +57,15 @@ if args['gpu'] < 0:
 else:
 	setup_gpu(str(args['gpu']))
 
-test = []
-train = []
-train_Text = args['train_text']
+# test = []
+# train = []
+# train_Text = args['train_text']
 test_Text = args['test_text']
 
-train = list(csv.reader(codecs.open(train_Text, encoding='utf-8')))
-train = [i[0] for i in train]
+# train = list(csv.reader(codecs.open(train_Text, encoding='utf-8')))
+# train = [i[0] for i in train]
 test = list(csv.reader(codecs.open(test_Text, encoding='utf-8')))
-test = [i[0] for i in test]
+test = [i for i in test]
 '''
 # with open(train_Text) as f:
 # 	for line in f:
@@ -80,39 +80,40 @@ test = [i[0] for i in test]
 # # f.close() # not required
 '''
 
-train = [s.strip("\n") for s in train]
+# train = [s.strip("\n") for s in train]
 test = [s.strip("\n") for s in test]
 
-text = train + test
-text = [s.split(" ") for s in text]
-sequence_length = max(len(x) for x in text)
-print(sequence_length)
-#return
-#sys.exit()
+# text = train + test
+# text = [s.split(" ") for s in text]
+# sequence_length = max(len(x) for x in text)
 
 
-tokenizer = load_create_tokenizer(train,None,True)
-print("Created the Tokenzier " )
-
-X_train = load_create_padded_data(X_train=train,savetokenizer=False,isPaddingDone=False,maxlen=sequence_length,tokenizer_path='./New_Tokenizer.tkn')
+# tokenizer = load_create_tokenizer(train,None,True)
+sequence_length=53 # calculated separatley for Hindi
+f=open('New_Tokenizer.tkn','r')
+tokenizer=pickle.load(f)
+f.close()
+# X_train = load_create_padded_data(X_train=train,savetokenizer=False,isPaddingDone=False,maxlen=sequence_length,tokenizer_path='./New_Tokenizer.tkn')
 X_test = load_create_padded_data(X_train=test,savetokenizer=False,isPaddingDone=False,maxlen=sequence_length,tokenizer_path='./New_Tokenizer.tkn')
 word_index = tokenizer.word_index
-embedding_matrix = load_create_embedding_matrix(word_index,len(word_index)+1,300,'./cc.hi.300.vec',False,True,'./Emb_Mat.mat')
-print("Created the Embedding Matrix")
+# embedding_matrix = load_create_embedding_matrix(word_index,len(word_index)+1,300,'./cc.hi.300.vec',False,True,'./Emb_Mat.mat')
+f=open('Emb_Mat.mat','r')
+embedding_matrix=pickle.load(f)
+f.close()
 
-Y_test=[]
-Y_train=[]
-train_Text = args['train_label']
-test_Text = args['test_label']
+# Y_test=[]
+# Y_train=[]
+# train_Text = args['train_label']
+# test_Text = args['test_label']
 
-with open(train_Text) as f:
-	for line in f:
-		Y_train.append(line)
+# with open(train_Text) as f:
+# 	for line in f:
+# 		Y_train.append(line)
 
-# f.close()
-with open(test_Text) as f:
-	for line in f:
-		Y_test.append(line)
+# # f.close()
+# with open(test_Text) as f:
+# 	for line in f:
+# 		Y_test.append(line)
 
 # f.close()
 

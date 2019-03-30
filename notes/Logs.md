@@ -1,4 +1,5 @@
-## This contains the basic structure for code
+#
+This contains the basic structure for code
 ### Date : 14/1/19 
 Working on hDQN with following specs :
 **Meta Policy** :
@@ -158,3 +159,10 @@ Issues:
 # 20/2/19
 implmemented the updated more power reweard fcuntion in the caswe of teh train_meta2.py
 2. Still the readme requried update about the implmementation of the vartious properties of the rweward that are written under the file `train_meta2.py`
+
+# 27/3/19
+Today started working on the hindi multi intent implementatiaon
+This code section is not included in this respository , it is lcoated on the my system
+Things to be done
+[] Correct all the individual intent type .py files i.e. airline.py , with th proper added hindi tags
+[] Correct the imp_dicts.py files with the hindi resposnes instead of the english respones

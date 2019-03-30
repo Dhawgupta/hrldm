@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# this for python 2.7
 import codecs
 import re
 class Tokenizer():
@@ -179,11 +180,13 @@ class Tokenizer():
 		return stem_word
 
 	def remove_stop_words(self):
-		f=codecs.open("./ATIS_data/ATIS_SLOT_TRAIN_HINDI.txt",encoding='utf-8')
+		# f=codecs.open("./ATIS_data/ATIS_SLOT_TRAIN_HINDI.txt",encoding='utf-8')
 		if not self.stemmed_word:
 			self.generate_stem_dict()
-		stopwords=[x.strip() for x in f.readlines()]
-		tokens=[i for i in self.stemmed_word if unicode(i) not in stopwords]
+		# stopwords=[x.strip() for x in f.readlines()]
+		# tokens=[i for i in self.stemmed_word if unicode(i) not in stopwords]
+		tokens=[i for i in self.stemmed_word]
+
 		self.final_tokens=tokens
 		return tokens
 
