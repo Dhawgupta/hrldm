@@ -308,13 +308,14 @@ class MetaEnvMulti:
                 reward = self.calculate_external_reward(np.copy(self.latest_start_confidence_start), self.current_slot_state, option)*self.w2 # this was a mistake in the revious code
             # the current_intent_state should not change
             self.current_intent_state[option] = 0.0
+            # @29/3/19 : New change
             for i in range(self.intent_space_size):
                 # if the intent is there
                 if self.current_intent_state[i] > 0.01:
                     # this intent is yet ro ve served
                     # check if all teh slots for this intent are folled or not
                     if self.check_confidence_state(i):
-                        self.current_intent_state[i] = 0.0
+                        self.current_intent_state[i] = 0.0 # i.e. all slots satisfied hence, remove that intent, not required
 
 
             return self.latest_start_confidence_start, self.current_slot_state, self.current_intent_state,reward, done
