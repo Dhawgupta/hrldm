@@ -58,7 +58,7 @@ ap.add_argument('-do','--dropout',required = False,default = 0.00, type = float,
 ap.add_argument('-ch', '--controller-hidden', required = False, help = "The Hidden Layers  configuration of the Controller Policym This portion is not yet implemeneted in the Code \nFormat : n1_n2_n3 ..  , tells n1 nodes in layer 1 , n2 nodes in layer 2 , n3 nodes in layer 3 and so on." , default = '75')
 ap.add_argument('-ns','--number-slots',required=False , help = 'The number of confidence slots in the domain', type = int, default = 8)
 ap.add_argument('-ni','--number-intents',required = False, help = 'The Number of intents that the domain has', type = int, default = 5)
-ap.add_argument('-no','--number-options',required=False, help='The number of options for the meta policy', type = int, default = 6)
+ap.add_argument('-no','--number-options',required=False, help='The number of options for the meta policy', type = int, default = 5)
 ap.add_argument('-ca','--controller-action', required = False, help = 'The Number of Controller Actions, although thte code is designed to work for only 20 action as of now', type = int, default = 20 )
 ap.add_argument('-p','--save-folder',required = True, help = 'Provide the path to the fodler where we need to store the meta policy',type = str, default = './save/')
 ap.add_argument('-bcl','--break-controller-loop',help = 'Sometimes the Controller POlicy tends to be stuck in infiint loop, to remedy this we will restrict its runs to some value', type = int, default = 100)
@@ -164,7 +164,7 @@ def main():
                 ###############################################
 
             # @29/3/19 changes done over here
-            confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end3(option)
+            confidence_state, next_confidence_state, intent_state, meta_reward , done = env.meta_step_end5(option)
 
 
             meta_end_state = np.concatenate([next_confidence_state, intent_state])
