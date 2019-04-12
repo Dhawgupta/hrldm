@@ -133,7 +133,7 @@ def main():
             state = state.reshape([1, META_STATE_SIZE])  # Converted to appropritate size
             meta_start_state = state.copy()
 
-            option = MetaAgent.act(state, all_options, epsilon=epsilon)
+            option = MetaAgent.act(state, all_options, epsilon=0.0)
             next_confidence_state = env.meta_step_start(option)  # get the reward at the sub policy level
             meta_reward = 0
             print("The state : {}\nThe option : {}".format(meta_start_state, option))
