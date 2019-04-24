@@ -176,15 +176,15 @@ class DQNAgent:
         # print("in targets")
         no_state = np.zeros(self.state_size)
 
-        states = np.array([ o[1][0] for o in batch ])
-        states_ = np.array([ (no_state if o[1][3] is None else o[1][3]) for o in batch ])
+        states = np.array([ o[1][0] for o in batch ]) # from state
+        states_ = np.array([ (no_state if o[1][3] is None else o[1][3]) for o in batch ]) # to state
         #print(states)
         states = np.reshape(states, (1,self.state_size))
         states_ = np.reshape(states_, (1,self.state_size))
         #print(states.shape)
-        p = self.predict(states)
+        p = self.predict(states) # predict the action on the init state
 
-        p_ = self.predict(states_, target=False)
+        p_ = self.predict(states_, target=False) #
         pTarget_ = self.predict(states_, target=True)
 
         x = np.zeros((len(batch), self.state_size))

@@ -22,3 +22,7 @@ src/hindi/slot_module/
 ._*
 
 *pycache*
+
+*.egg
+
+\.DS_Store
