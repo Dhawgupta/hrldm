@@ -26,3 +26,5 @@ src/hindi/slot_module/
 *.egg
 
 \.DS_Store
+
+src/complete_system/CompleteSystem/
