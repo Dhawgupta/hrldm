@@ -9,7 +9,7 @@ Repository and Code for the Hierarchical Reinforcement Learning-based Dialogue M
 * **Corresponding Author:** [Dhawal Gupta] (dhawgupta@gmail.com), [Tulika Saha] (sahatulika15@gmail.com)
 * **Accepted(December, 2020):**  [Expert Systems with Applications](https://www.sciencedirect.com/science/article/abs/pii/S0957417420304747)
 
-If you consider this dataset useful, please cite it as
+If you consider this code useful, please cite it as
 
 ```bash
 @article{saha2020towards,
